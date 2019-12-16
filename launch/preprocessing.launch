@@ -1,9 +1,5 @@
 <launch>
 
-  <!-- Heading and inclinometer translators -->
-  <node name="heading_imu_translator_node" pkg="agribot_localization" type="heading_imu_translator_node" respawn="true" />
-  <node name="inclinometer_imu_translator_node" pkg="agribot_localization" type="inclinometer_imu_translator_node" respawn="true" />
-
   <!-- IMU filter -->
   <include file="$(find agribot_localization)/launch/imu_filter.launch" />
 
