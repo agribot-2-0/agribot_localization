@@ -8,6 +8,6 @@
   <include file="$(find agribot_localization)/launch/imu_filter.launch" />
 
   <!-- Forward kinematics -->
-  <node name="forward_kinematics_node" pkg="agribot_localization" type="forward_kinematics_node" respawn="true" />
+  <node name="odometry_node" pkg="agribot_localization" type="odometry_node" respawn="true" />
 
 </launch>

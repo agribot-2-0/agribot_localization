@@ -10,7 +10,6 @@ project(agribot_localization)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   robot_localization
-  tf
   imu_complementary_filter
   std_msgs
   nav_msgs
@@ -49,17 +48,11 @@ include_directories(
 
 link_directories("${PROJECT_SOURCE_DIR}")
 
-add_executable(heading_imu_translator_node src/heading_imu_translator_node.cpp src/HeadingImuTranslator.cpp)
-add_executable(inclinometer_imu_translator_node src/inclinometer_imu_translator_node.cpp src/InclinometerImuTranslator.cpp)
-add_executable(forward_kinematics_node src/forward_kinematics_node.cpp)
+add_executable(odometry_node src/odometry_node.cpp)
 
-target_link_libraries(heading_imu_translator_node ${catkin_LIBRARIES})
-target_link_libraries(inclinometer_imu_translator_node ${catkin_LIBRARIES})
-target_link_libraries(forward_kinematics_node ${catkin_LIBRARIES})
+target_link_libraries(odometry_node ${catkin_LIBRARIES})
 
-add_dependencies(heading_imu_translator_node ${catkin_EXPORTED_TARGETS})
-add_dependencies(inclinometer_imu_translator_node ${catkin_EXPORTED_TARGETS})
-add_dependencies(forward_kinematics_node ${catkin_EXPORTED_TARGETS})
+add_dependencies(odometry_node ${catkin_EXPORTED_TARGETS})
 
 
 #############
