@@ -1,0 +1,21 @@
+# Desired parameters
+imu1: agribot/heading_imu
+imu1_config: [false,  false,  false,
+              false,  false,  true,
+              false,  false,  false,
+              false,  false,  false,
+              false,  false,  false]
+imu1_queue_size: 5
+
+
+# Unnecessary parameters
+
+
+# Parameters to be tested
+imu1_nodelay: false
+imu1_differential: false
+imu1_relative: true
+imu1_pose_rejection_threshold: 0.8
+imu1_twist_rejection_threshold: 0.8
+imu1_linear_acceleration_rejection_threshold: 0.8
+imu1_remove_gravitational_acceleration: true

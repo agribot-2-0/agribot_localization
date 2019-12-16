@@ -1,0 +1,11 @@
+<launch>
+  <arg name="use_ukf" default="false" />
+
+  <!-- Preprocessing -->
+  <include file="$(find agribot_localization)/launch/preprocessing.launch"/>
+
+  <!-- Robot localization -->
+  <include file="$(find agribot_localization)/launch/robot_localization.launch" >
+    <arg name="use_ukf" value="$(arg use_ukf)" />
+  </include>
+</launch>
