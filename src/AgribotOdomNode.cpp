@@ -24,9 +24,9 @@ AgribotOdomNode::AgribotOdomNode():
                                 1,
                                 &AgribotOdomNode::frontCartCallback,
                                 this);
-  _rearCartSub = _nh.subscribe("agribot/encoder/cart/rear",
+  _backCartSub = _nh.subscribe("agribot/encoder/cart/back",
                               1,
-                              &AgribotOdomNode::rearCartCallback,
+                              &AgribotOdomNode::backCartCallback,
                               this);
 }
 
@@ -70,7 +70,7 @@ void AgribotOdomNode::frontCartCallback(const std_msgs::Float32 msg)
   _agribotOdom.vSetTheta1(msg.data);
 }
 
-void AgribotOdomNode::rearCartCallback(const std_msgs::Float32 msg)
+void AgribotOdomNode::backCartCallback(const std_msgs::Float32 msg)
 {
   _agribotOdom.vSetTheta2(msg.data);
 }

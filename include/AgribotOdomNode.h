@@ -17,7 +17,7 @@ private:
   ros::Publisher _odometryPub;
   ros::Subscriber _caterpillarSub;
   ros::Subscriber _frontCartSub;
-  ros::Subscriber _rearCartSub;
+  ros::Subscriber _backCartSub;
 
   tf2_ros::Buffer _tfBuffer;
   tf2_ros::TransformListener _tfListener;
@@ -26,7 +26,7 @@ private:
 
   void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
   void frontCartCallback(const std_msgs::Float32 msg);
-  void rearCartCallback(const std_msgs::Float32 msg);
+  void backCartCallback(const std_msgs::Float32 msg);
 
   bool updateTheta0FromLookupTransform();
 
