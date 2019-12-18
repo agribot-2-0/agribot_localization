@@ -9,6 +9,8 @@ project(agribot_localization)
 #############################################################################
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  tf2
+  tf2_ros
   robot_localization
   imu_complementary_filter
   std_msgs
@@ -48,7 +50,7 @@ include_directories(
 
 link_directories("${PROJECT_SOURCE_DIR}")
 
-add_executable(odometry_node src/odometry_node.cpp)
+add_executable(odometry_node src/odometry_node.cpp src/AgribotOdometry.cpp src/AgribotOdomNode.cpp)
 
 target_link_libraries(odometry_node ${catkin_LIBRARIES})
 
