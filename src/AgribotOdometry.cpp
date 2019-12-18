@@ -24,8 +24,10 @@ bool AgribotOdometry::update()
 {
   if (_bTheta0Received && _bTheta1Received && _bTheta2Received)
   {
-    _fLinearVelocityX = -sin(_fTheta0 + _fTheta1) * _fWheelRadius * _fEta1;
-    _fLinearVelocityY = cos(_fTheta0 + _fTheta1) * _fWheelRadius * _fEta1;
+    // Formulas adjusted to ROS coordinate frame standard
+    // x=y and y=-x compared to mathematical model derived by Robert Muszyński
+    _fLinearVelocityX = cos(_fTheta0 + _fTheta1) * _fWheelRadius * _fEta1;
+    _fLinearVelocityY = sin(_fTheta0 + _fTheta1) * _fWheelRadius * _fEta1;
     _fAngularVelocityZ = sin(_fTheta1 - _fTheta2) / cos(_fTheta2) * _fWheelRadius
     / _fChassisLength * _fEta1;
 
@@ -47,19 +49,19 @@ bool AgribotOdometry::cleanup()
 
 void AgribotOdometry::vSetTheta0(float value)
 {
-  _fTheta0 = value;
+  _fTheta0 = value + THETA0_OFFSET;
   _bTheta0Received = true;
 }
 
 void AgribotOdometry::vSetTheta1(float value)
 {
-  _fTheta1 = value;
+  _fTheta1 = value + THETA1_OFFSET;
   _bTheta1Received = true;
 }
 
 void AgribotOdometry::vSetTheta2(float value)
 {
-  _fTheta2 = value;
+  _fTheta2 = value + THETA2_OFFSET;
   _bTheta2Received = true;
 }
 

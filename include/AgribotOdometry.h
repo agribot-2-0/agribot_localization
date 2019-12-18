@@ -4,6 +4,11 @@
 static const float DEFAULT_WHEEL_RADIUS   = 0.16;
 static const float DEFAULT_CHASSIS_LENGTH = 2.42;
 
+// Offsets to adjust theta values received from HAL to mathematical model
+static const float THETA0_OFFSET = 0.0;
+static const float THETA1_OFFSET = 0.0;
+static const float THETA2_OFFSET = M_PI;
+
 class AgribotOdometry: public AgribotComponent
 {
 private:
