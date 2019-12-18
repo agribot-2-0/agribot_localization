@@ -58,6 +58,10 @@ void AgribotOdomNode::caterpillarCallback(const agribot_msgs::AgribotCaterpillar
   odomMsg.header.frame_id = "odom";
   odomMsg.child_frame_id = "front_cart_link";
 
+  odomMsg.twist.twist.covariance[0] = LINEAR_VEL_X_COVARIANCE;
+  odomMsg.twist.twist.covariance[7] = LINEAR_VEL_Y_COVARIANCE;
+  odomMsg.twist.twist.covariance[35] = ANGULAR_VEL_Z_COVARIANCE;
+
   _odometryPub.publish(odomMsg);
 }
 

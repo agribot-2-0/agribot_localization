@@ -6,6 +6,10 @@
 #include <nav_msgs/Odometry.h>
 #include <agribot_msgs/AgribotCaterpillar.h>
 
+static const float LINEAR_VEL_X_COVARIANCE  = 0.001;
+static const float LINEAR_VEL_Y_COVARIANCE  = 0.001;
+static const float ANGULAR_VEL_Z_COVARIANCE = 0.001;
+
 class AgribotOdomNode
 {
 private:
