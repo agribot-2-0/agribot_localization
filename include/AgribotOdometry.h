@@ -1,8 +1,8 @@
 #include <agribot_common/AgribotComponent.h>
 #include <cmath>
 
-static const float DEFAULT_WHEEL_RADIUS   = 0.04;
-static const float DEFAULT_CHASSIS_LENGTH = 1.0;
+static const float DEFAULT_WHEEL_RADIUS   = 0.16;
+static const float DEFAULT_CHASSIS_LENGTH = 2.42;
 
 class AgribotOdometry: public AgribotComponent
 {
