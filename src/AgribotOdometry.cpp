@@ -1,11 +1,19 @@
 #include <AgribotOdometry.h>
+#include <ros/ros.h>
 
 AgribotOdometry::AgribotOdometry():
   _fWheelRadius(DEFAULT_WHEEL_RADIUS),
   _fChassisLength(DEFAULT_CHASSIS_LENGTH),
   _bTheta0Received(false),
   _bTheta1Received(false),
-  _bTheta2Received(false)
+  _bTheta2Received(false),
+  _bDtSet(false),
+  _fX(0.0),
+  _fY(0.0),
+  _fYaw(0.0),
+  _fTheta0(0.0),
+  _fTheta1(0.0),
+  _fTheta2(0.0)
 {
 
 }
@@ -24,12 +32,12 @@ bool AgribotOdometry::update()
 {
   if (_bTheta0Received && _bTheta1Received && _bTheta2Received)
   {
-    // Formulas adjusted to ROS coordinate frame standard
-    // x=y and y=-x compared to mathematical model derived by Robert Muszyński
-    _fLinearVelocityX = cos(_fTheta0 + _fTheta1) * _fWheelRadius * _fEta1;
-    _fLinearVelocityY = sin(_fTheta0 + _fTheta1) * _fWheelRadius * _fEta1;
-    _fAngularVelocityZ = sin(_fTheta1 - _fTheta2) / cos(_fTheta2) * _fWheelRadius
-    / _fChassisLength * _fEta1;
+    vUpdateVelocities();
+
+    if(_bDtSet)
+    {
+      vUpdatePositions();
+    }
 
     return true;
   }
@@ -46,6 +54,37 @@ bool AgribotOdometry::cleanup()
   return false;
 }
 
+void AgribotOdometry::vUpdateVelocities()
+{
+  ROS_WARN("Theta0: %f\tTheta1: %f\tTheta2: %f\t", _fTheta0, _fTheta1, _fTheta2);
+
+  // Formulas adjusted to ROS coordinate frame standard
+  // x=y and y=-x compared to mathematical model derived by Robert Muszyński
+  _fLinearVelocityX = cos(_fTheta0 + _fTheta1) * _fEta1;
+  _fLinearVelocityY = sin(_fTheta0 + _fTheta1) * _fEta1;
+  _fAngularVelocityZ = sin(_fTheta1 - _fTheta2) / cos(_fTheta2)
+                        / _fChassisLength * _fEta1;
+}
+
+void AgribotOdometry::vUpdatePositions()
+{
+  // TODO - better integration (?)
+  ROS_WARN("%f", _dDt);
+
+  _fX   += _fLinearVelocityX  * _dDt;
+  _fY   += _fLinearVelocityY  * _dDt;
+  _fYaw += _fAngularVelocityZ * _dDt;
+  _fTheta0 = _fYaw;
+
+  if(_fYaw < -M_PI)
+  {
+    _fYaw += (2*M_PI);
+  }
+  else if(_fYaw > M_PI)
+  {
+    _fYaw -= (2*M_PI);
+  }
+}
 
 void AgribotOdometry::vSetTheta0(float value)
 {
@@ -80,6 +119,12 @@ void AgribotOdometry::vSetChassisLength(float value)
   _fChassisLength = value;
 }
 
+void AgribotOdometry::vSetDt(float value)
+{
+  _dDt = value;
+  _bDtSet = true;
+}
+
 float AgribotOdometry::fGetTheta0()
 {
   return _fTheta0;
@@ -108,6 +153,21 @@ float AgribotOdometry::fGetWheelRadius()
 float AgribotOdometry::fGetChassisLength()
 {
   return _fChassisLength;
+}
+
+float AgribotOdometry::fGetX()
+{
+  return _fX;
+}
+
+float AgribotOdometry::fGetY()
+{
+  return _fY;
+}
+
+float AgribotOdometry::fGetYaw()
+{
+  return _fYaw;
 }
 
 float AgribotOdometry::fGetLinearVelocityX()
