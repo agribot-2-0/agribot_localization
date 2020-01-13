@@ -11,6 +11,7 @@
 
     <param name="publish_debug_topics"  value="false" type="bool"/>
 
+    <!-- <remap from="imu/data_raw"  to="agribot/imu/raw" /> -->
     <remap from="imu/data_raw"  to="agribot/imu/raw" />
     <remap from="imu/mag"       to="agribot/magnetic_field" />
     <remap from="imu/data"      to="agribot/imu/filtered" />

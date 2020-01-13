@@ -1,0 +1,12 @@
+<launch>
+
+  <!-- Forward kinematics -->
+  <node name="odometry_node" pkg="agribot_localization" type="odometry_node" respawn="true" />
+
+  <!-- Odometry transform (front_footprint -> base_footprint)-->
+  <node name="odometry_transform_node" pkg="agribot_localization" type="odometry_transform_node" respawn="true" />
+
+  <node pkg="tf" type="static_transform_publisher" name="front_cart_footprint_publisher"
+          args="1.05 0 0 0 0 0 1 base_footprint front_cart_footprint 100" />
+
+</launch>
