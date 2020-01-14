@@ -58,7 +58,7 @@ link_directories(
  ${PROJECT_SOURCE_DIR}
 )
 
-add_executable(odometry_node src/odometry_node.cpp src/AgribotOdometry.cpp src/AgribotOdomNode.cpp)
+add_executable(odometry_node src/odometry_node.cpp src/AgribotOdometry.cpp src/AgribotOdometryNode.cpp)
 add_executable(odometry_transform_node src/odometry_transform_node.cpp)
 
 target_link_libraries(odometry_node ${catkin_LIBRARIES})
