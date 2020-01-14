@@ -25,7 +25,6 @@ private:
   AgribotOdometry _agribotOdom;
   double _dPreviousTimestamp;
   bool _bTimestampSet;
-  bool _bPublishTf;
 
   void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
   void frontCartCallback(const std_msgs::Float32 msg);
