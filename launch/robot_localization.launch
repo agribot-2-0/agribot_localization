@@ -4,15 +4,12 @@
     <!-- EKF/UKF selection -->
     <arg name="use_ukf" default="false" />
 
-    <!-- ########### Launch navsat_transform_node (for GPS) ########### -->
-    <include file="$(find agribot_localization)/launch/navsat_transform.launch" />
-
     <!-- ########### Launch EKF or UKF ########### -->
     <!-- Launch EKF -->
     <group unless="$(arg use_ukf)">
 
       <!-- First (map->odom) EKF -->
-      <node   pkg="robot_localization"
+      <!-- <node   pkg="robot_localization"
               type="ekf_localization_node"
               name="agribot_localization_map_odom_ekf"
               clear_params="true"
@@ -27,7 +24,7 @@
               <rosparam command="load" file="$(find agribot_localization)/params/sensors/inclinometer.yaml" />
               <remap from="odometry/filtered" to="agribot/odom/prefiltered" />
               <remap from="set_pose" to="set_pose_map_odom" />
-      </node>
+      </node> -->
 
       <!-- Second (odom->base_link) EKF -->
       <node   pkg="robot_localization"
@@ -36,13 +33,13 @@
               clear_params="true"
               respawn="true" >
 
+              <param name="world_frame" value="odom" type="str"/>
               <rosparam command="load" file="$(find agribot_localization)/params/common.yaml" />
-              <rosparam command="load" file="$(find agribot_localization)/params/sensors/prefiltered_odom.yaml" />
+              <!-- <rosparam command="load" file="$(find agribot_localization)/params/sensors/prefiltered_odom.yaml" /> -->
               <rosparam command="load" file="$(find agribot_localization)/params/sensors/raw_odom.yaml" />
-              <rosparam command="load" file="$(find agribot_localization)/params/sensors/raw_odom.yaml" />
-              <rosparam command="load" file="$(find agribot_localization)/params/sensors/imu.yaml" />
-              <rosparam command="load" file="$(find agribot_localization)/params/sensors/heading.yaml" />
-              <rosparam command="load" file="$(find agribot_localization)/params/sensors/inclinometer.yaml" />
+              <!-- <rosparam command="load" file="$(find agribot_localization)/params/sensors/imu.yaml" /> -->
+              <!-- <rosparam command="load" file="$(find agribot_localization)/params/sensors/heading.yaml" /> -->
+              <!-- <rosparam command="load" file="$(find agribot_localization)/params/sensors/inclinometer.yaml" /> -->
               <remap from="odometry/filtered" to="agribot/odom/estimated" />
               <remap from="set_pose" to="set_pose_odom_baselink" />
       </node>
@@ -77,6 +74,7 @@
                     clear_params="true"
                     respawn="true" >
 
+                    <param name="world_frame" value="odom" type="str"/>
                     <rosparam command="load" file="$(find agribot_localization)/params/common.yaml" />
                     <rosparam command="load" file="$(find agribot_localization)/params/ukf.yaml" />
                     <rosparam command="load" file="$(find agribot_localization)/params/sensors/prefiltered_odom.yaml" />
