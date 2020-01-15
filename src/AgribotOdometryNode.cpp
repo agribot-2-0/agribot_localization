@@ -76,19 +76,17 @@ bool AgribotOdometryNode::updateDt(double newTimestamp)
 
 void AgribotOdometryNode::frontCartCallback(const std_msgs::Float32 msg)
 {
-  float angleRadians = msg.data;
-  _agribotOdom.vSetTheta1(angleRadians);
+  _agribotOdom.vSetTheta1(msg.data);
 }
 
 void AgribotOdometryNode::backCartCallback(const std_msgs::Float32 msg)
 {
-  float angleRadians = msg.data;
-  _agribotOdom.vSetTheta2(angleRadians);
+  _agribotOdom.vSetTheta2(msg.data);
 }
 
 void AgribotOdometryNode::publishOdometry()
 {
-  // X,y
+  // X,Y
   _odometryMsg.pose.pose.position.x = _agribotOdom.fGetX();
   _odometryMsg.pose.pose.position.y = _agribotOdom.fGetY();
   // Yaw
