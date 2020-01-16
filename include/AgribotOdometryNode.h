@@ -12,7 +12,7 @@ static const float LINEAR_VEL_X_COVARIANCE  = 0.001;
 static const float LINEAR_VEL_Y_COVARIANCE  = 0.001;
 static const float ANGULAR_VEL_Z_COVARIANCE = 0.001;
 
-class AgribotOdomNode
+class AgribotOdometryNode
 {
 private:
   ros::NodeHandle _nh;
@@ -22,23 +22,18 @@ private:
   ros::Publisher _odometryPub;
   nav_msgs::Odometry _odometryMsg;
 
-  tf2_ros::Buffer _tfBuffer;
-  tf2_ros::TransformListener _tfListener;
-
   AgribotOdometry _agribotOdom;
   double _dPreviousTimestamp;
   bool _bTimestampSet;
-  bool _bPublishTf;
 
   void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
   void frontCartCallback(const std_msgs::Float32 msg);
   void backCartCallback(const std_msgs::Float32 msg);
 
   void publishOdometry();
-  void publishTf();
-  bool updateTheta0FromLookupTransform();
+  bool updateDt(double newTimestamp);
 
 public:
-  AgribotOdomNode();
+  AgribotOdometryNode();
   void run();
 };
