@@ -8,7 +8,7 @@ AgribotOdometry::AgribotOdometry():
   _bTheta1Received(false),
   _bTheta2Received(false),
   _bDtSet(false),
-  _fX(DEFAULT_CHASSIS_LENGTH/2),  // front_cart_footprint translation (so base_footprint starts in 0,0,0)
+  _fX(0.0),
   _fY(0.0),
   _fTheta0(0.0),
   _fTheta1(0.0),
@@ -55,10 +55,9 @@ bool AgribotOdometry::cleanup()
 
 void AgribotOdometry::vUpdateVelocities()
 {
-  // Formulas adjusted to ROS coordinate frame standard
-  // x=y and y=-x compared to mathematical model derived by Robert Muszyński
-  _fLinearVelocityX = cos(_fTheta0 + _fTheta1) * _fEta1;
-  _fLinearVelocityY = sin(_fTheta0 + _fTheta1) * _fEta1;
+  // Based on new formulas (complying to ROS coordinates)
+  _fLinearVelocityX = _fEta1 * (cos(_fTheta0+_fTheta1) + (sin(_fTheta0)/(2.0*cos(_fTheta2))*sin(_fTheta1-_fTheta2)));
+  _fLinearVelocityY = _fEta1 * (sin(_fTheta0+_fTheta1) - (cos(_fTheta0)/(2.0*cos(_fTheta2))*sin(_fTheta1-_fTheta2)));
   _fAngularVelocityZ = sin(_fTheta1 - _fTheta2) / cos(_fTheta2)
                         / _fChassisLength * _fEta1;
 }
