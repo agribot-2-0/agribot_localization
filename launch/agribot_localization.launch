@@ -3,7 +3,8 @@
   <arg name="use_ukf" default="false" />
 
   <!-- IMU filter -->
-  <include file="$(find agribot_localization)/launch/imu_filter.launch" />
+  <!-- <include file="$(find agribot_localization)/launch/imu_complementary_filter.launch" /> -->
+  <include file="$(find agribot_localization)/launch/imu_madgwick_filter.launch" />
 
   <!-- Odometry -->
   <include file="$(find agribot_localization)/launch/odometry.launch"/>

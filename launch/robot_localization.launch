@@ -1,5 +1,4 @@
 <launch>
-
     <!-- ########### Configuration arguments ########### -->
     <!-- EKF/UKF selection -->
     <arg name="use_ukf" default="false" />
@@ -9,22 +8,21 @@
     <group unless="$(arg use_ukf)">
 
       <!-- First (map->odom) EKF -->
-      <!-- <node   pkg="robot_localization"
+      <node   pkg="robot_localization"
               type="ekf_localization_node"
               name="agribot_localization_map_odom_ekf"
               clear_params="true"
               respawn="true" >
 
               <param name="world_frame" value="map" type="str"/>
+              <param name="transform_timeout"     value="0.1" type="double"/>
+              <param name="frequency" value="30" type="double"/>
+              <param name="publish_tf" value="true" type="bool"/>
               <rosparam command="load" file="$(find agribot_localization)/params/common.yaml" />
-              <rosparam command="load" file="$(find agribot_localization)/params/sensors/gps_odom.yaml" />
-              <rosparam command="load" file="$(find agribot_localization)/params/sensors/raw_odom.yaml" />
-              <rosparam command="load" file="$(find agribot_localization)/params/sensors/imu.yaml" />
-              <rosparam command="load" file="$(find agribot_localization)/params/sensors/heading.yaml" />
-              <rosparam command="load" file="$(find agribot_localization)/params/sensors/inclinometer.yaml" />
+              <rosparam command="load" file="$(find agribot_localization)/params/map_odom_sensors.yaml" />
               <remap from="odometry/filtered" to="agribot/odom/prefiltered" />
               <remap from="set_pose" to="set_pose_map_odom" />
-      </node> -->
+      </node>
 
       <!-- Second (odom->base_link) EKF -->
       <node   pkg="robot_localization"
@@ -34,12 +32,11 @@
               respawn="true" >
 
               <param name="world_frame" value="odom" type="str"/>
+              <param name="transform_timeout"     value="0.1" type="double"/>
+              <param name="frequency" value="30" type="double"/>
+              <param name="publish_tf" value="true" type="bool"/>
               <rosparam command="load" file="$(find agribot_localization)/params/common.yaml" />
-              <!-- <rosparam command="load" file="$(find agribot_localization)/params/sensors/prefiltered_odom.yaml" /> -->
-              <rosparam command="load" file="$(find agribot_localization)/params/sensors/raw_odom.yaml" />
-              <!-- <rosparam command="load" file="$(find agribot_localization)/params/sensors/imu.yaml" /> -->
-              <!-- <rosparam command="load" file="$(find agribot_localization)/params/sensors/heading.yaml" /> -->
-              <!-- <rosparam command="load" file="$(find agribot_localization)/params/sensors/inclinometer.yaml" /> -->
+              <rosparam command="load" file="$(find agribot_localization)/params/odom_base_sensors.yaml" />
               <remap from="odometry/filtered" to="agribot/odom/estimated" />
               <remap from="set_pose" to="set_pose_odom_baselink" />
       </node>
@@ -48,44 +45,39 @@
     <!-- Launch UKF -->
     <group if="$(arg use_ukf)">
 
-            <!-- First (map->odom) UKF -->
-            <node   pkg="robot_localization"
-                    type="ukf_localization_node"
-                    name="agribot_localization_map_odom_ukf"
-                    clear_params="true"
-                    respawn="true" >
+      <!-- First (map->odom) UKFKF -->
+      <node   pkg="robot_localization"
+              type="ukf_localization_node"
+              name="agribot_localization_map_odom_ukf"
+              clear_params="true"
+              respawn="true" >
 
-                    <param name="world_frame" value="map" type="str"/>
-                    <rosparam command="load" file="$(find agribot_localization)/params/common.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/ukf.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/sensors/gps_odom.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/sensors/raw_odom.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/sensors/imu.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/sensors/heading.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/sensors/inclinometer.yaml" />
-                    <remap from="odometry/filtered" to="agribot/odom/prefiltered" />
-                    <remap from="set_pose" to="set_pose_map_odom" />
-            </node>
+              <param name="world_frame" value="map" type="str"/>
+              <param name="transform_timeout"     value="0.1" type="double"/>
+              <param name="frequency" value="30" type="double"/>
+              <param name="publish_tf" value="true" type="bool"/>
+              <rosparam command="load" file="$(find agribot_localization)/params/common.yaml" />
+              <rosparam command="load" file="$(find agribot_localization)/params/map_odom_sensors.yaml" />
+              <remap from="odometry/filtered" to="agribot/odom/prefiltered" />
+              <remap from="set_pose" to="set_pose_map_odom" />
+      </node>
 
-            <!-- Second (odom->base_link) UKF -->
-            <node   pkg="robot_localization"
-                    type="ukf_localization_node"
-                    name="agribot_localization_odom_baselink_ukf"
-                    clear_params="true"
-                    respawn="true" >
+      <!-- Second (odom->base_link) UKF -->
+      <node   pkg="robot_localization"
+              type="ukf_localization_node"
+              name="agribot_localization_odom_baselink_ukf"
+              clear_params="true"
+              respawn="true" >
 
-                    <param name="world_frame" value="odom" type="str"/>
-                    <rosparam command="load" file="$(find agribot_localization)/params/common.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/ukf.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/sensors/prefiltered_odom.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/sensors/raw_odom.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/sensors/raw_odom.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/sensors/imu.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/sensors/heading.yaml" />
-                    <rosparam command="load" file="$(find agribot_localization)/params/sensors/inclinometer.yaml" />
-                    <remap from="odometry/filtered" to="agribot/odom/estimated" />
-                    <remap from="set_pose" to="set_pose_odom_baselink" />
-            </node>
+              <param name="world_frame" value="odom" type="str"/>
+              <param name="transform_timeout"     value="0.1" type="double"/>
+              <param name="frequency" value="30" type="double"/>
+              <param name="publish_tf" value="true" type="bool"/>
+              <rosparam command="load" file="$(find agribot_localization)/params/common.yaml" />
+              <rosparam command="load" file="$(find agribot_localization)/params/ukf.yaml" />
+              <rosparam command="load" file="$(find agribot_localization)/params/odom_base_sensors.yaml" />
+              <remap from="odometry/filtered" to="agribot/odom/estimated" />
+              <remap from="set_pose" to="set_pose_odom_baselink" />
+      </node>
     </group>
-
 </launch>
