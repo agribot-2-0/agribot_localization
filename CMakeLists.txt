@@ -57,13 +57,8 @@ link_directories(
 )
 
 add_executable(odometry_node src/odometry_node.cpp src/AgribotOdometry.cpp src/AgribotOdometryNode.cpp)
-add_executable(odometry_transform_node src/odometry_transform_node.cpp)
-
 target_link_libraries(odometry_node ${catkin_LIBRARIES})
-target_link_libraries(odometry_transform_node ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-
 add_dependencies(odometry_node ${catkin_EXPORTED_TARGETS})
-add_dependencies(odometry_transform_node ${catkin_EXPORTED_TARGETS})
 
 
 #############

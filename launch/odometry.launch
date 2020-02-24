@@ -3,7 +3,4 @@
   <!-- Forward kinematics -->
   <node name="odometry_node" pkg="agribot_localization" type="odometry_node" respawn="true" />
 
-  <!-- Odometry transform (front_footprint -> base_footprint)-->
-  <node name="odometry_transform_node" pkg="agribot_localization" type="odometry_transform_node" respawn="true" />
-
 </launch>

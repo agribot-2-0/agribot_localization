@@ -15,9 +15,9 @@ AgribotOdometryNode::AgribotOdometryNode():
     _agribotOdom.vSetChassisLength(chassisLength);
   }
 
-  _odometryPub = _nh.advertise<nav_msgs::Odometry>("agribot/odom/raw_front_cart", 10);
+  _odometryPub = _nh.advertise<nav_msgs::Odometry>("agribot/odom/raw", 10);
   _odometryMsg.header.frame_id = "odom";
-  _odometryMsg.child_frame_id = "front_cart_footprint";
+  _odometryMsg.child_frame_id = "base_footprint";
 
   _caterpillarSub = _nh.subscribe("agribot/encoder/caterpillar",
                                   1,
@@ -98,9 +98,9 @@ void AgribotOdometryNode::publishOdometry()
   _odometryMsg.pose.covariance[7] = POSITION_COVARIANCE;
   _odometryMsg.pose.covariance[35] = ORIENTATION_COVARIANCE;
 
-  // X,Y linear velocities
-  _odometryMsg.twist.twist.linear.x = _agribotOdom.fGetLinearVelocityX();
-  _odometryMsg.twist.twist.linear.y = _agribotOdom.fGetLinearVelocityY();
+  // X,Y linear velocities (in child_frame_id)
+  _odometryMsg.twist.twist.linear.x = _agribotOdom.fGetEta1();
+  _odometryMsg.twist.twist.linear.y = 0.0;
   // Yaw angular velocity
   _odometryMsg.twist.twist.angular.z = _agribotOdom.fGetAngularVelocityZ();
   // Twist covariances
