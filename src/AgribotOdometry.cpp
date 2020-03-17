@@ -14,7 +14,6 @@ AgribotOdometry::AgribotOdometry():
   _fTheta1(0.0),
   _fTheta2(0.0)
 {
-
 }
 
 int AgribotOdometry::configure()
@@ -33,7 +32,7 @@ bool AgribotOdometry::update()
   {
     vUpdateVelocities();
 
-    if(_bDtSet)
+    if (_bDtSet)
     {
       vUpdatePositions();
     }
@@ -55,11 +54,18 @@ bool AgribotOdometry::cleanup()
 
 void AgribotOdometry::vUpdateVelocities()
 {
+  float s0 = sin(_fTheta0);
+  float c0 = cos(_fTheta0);
+  float s2 = sin(_fTheta2);
+  float c2 = cos(_fTheta2);
+  float s01 = sin(_fTheta0 + _fTheta1);
+  float c01 = cos(_fTheta0 + _fTheta1);
+  float s1_2 = sin(_fTheta1 - _fTheta2);
+
   // Based on new formulas (complying to ROS coordinates)
-  _fLinearVelocityX = _fEta1 * (cos(_fTheta0+_fTheta1) + (sin(_fTheta0)/(2.0*cos(_fTheta2))*sin(_fTheta1-_fTheta2)));
-  _fLinearVelocityY = _fEta1 * (sin(_fTheta0+_fTheta1) - (cos(_fTheta0)/(2.0*cos(_fTheta2))*sin(_fTheta1-_fTheta2)));
-  _fAngularVelocityZ = sin(_fTheta1 - _fTheta2) / cos(_fTheta2)
-                        / _fChassisLength * _fEta1;
+  _fLinearVelocityX = _fEta1 * (c01 + (s0 * s1_2 / 2.0 / c2));
+  _fLinearVelocityY = _fEta1 * (s01 - (s0 * s1_2 / 2.0 / c2));
+  _fAngularVelocityZ = _fEta1 * s1_2 / c2 / _fChassisLength;
 }
 
 void AgribotOdometry::vUpdatePositions()
@@ -68,11 +74,11 @@ void AgribotOdometry::vUpdatePositions()
   _fY   += _fLinearVelocityY  * _dDt;
   _fTheta0 += _fAngularVelocityZ * _dDt;
 
-  if(_fTheta0 < -M_PI)
+  if (_fTheta0 < -M_PI)
   {
     _fTheta0 += (2*M_PI);
   }
-  else if(_fTheta0 > M_PI)
+  else if (_fTheta0 > M_PI)
   {
     _fTheta0 -= (2*M_PI);
   }

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <AgribotOdometry.h>
 #include <ros/ros.h>
 #include <tf2_ros/transform_listener.h>
@@ -14,26 +16,26 @@ static const float ANGULAR_VEL_Z_COVARIANCE = 0.0001;
 
 class AgribotOdometryNode
 {
-private:
-  ros::NodeHandle _nh;
-  ros::Subscriber _caterpillarSub;
-  ros::Subscriber _frontCartSub;
-  ros::Subscriber _backCartSub;
-  ros::Publisher _odometryPub;
-  nav_msgs::Odometry _odometryMsg;
+ private:
+    ros::NodeHandle _nh;
+    ros::Subscriber _caterpillarSub;
+    ros::Subscriber _frontCartSub;
+    ros::Subscriber _backCartSub;
+    ros::Publisher _odometryPub;
+    nav_msgs::Odometry _odometryMsg;
 
-  AgribotOdometry _agribotOdom;
-  double _dPreviousTimestamp;
-  bool _bTimestampSet;
+    AgribotOdometry _agribotOdom;
+    double _dPreviousTimestamp;
+    bool _bTimestampSet;
 
-  void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
-  void frontCartCallback(const std_msgs::Float32 msg);
-  void backCartCallback(const std_msgs::Float32 msg);
+    void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
+    void frontCartCallback(const std_msgs::Float32 msg);
+    void backCartCallback(const std_msgs::Float32 msg);
 
-  void publishOdometry();
-  bool updateDt(double newTimestamp);
+    void publishOdometry();
+    bool updateDt(double newTimestamp);
 
-public:
-  AgribotOdometryNode();
-  void run();
+ public:
+    AgribotOdometryNode();
+    void run();
 };
