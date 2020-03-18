@@ -33,7 +33,8 @@ AgribotOdometryNode::AgribotOdometryNode():
                               this);
 }
 
-void AgribotOdometryNode::caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg)
+void AgribotOdometryNode::caterpillarCallback(
+    const agribot_msgs::AgribotCaterpillar msg)
 {
   _agribotOdom.vSetEta1(msg.front_linear);
 
@@ -43,7 +44,7 @@ void AgribotOdometryNode::caterpillarCallback(const agribot_msgs::AgribotCaterpi
     return;
   }
 
-  if(_agribotOdom.update())
+  if (_agribotOdom.update())
   {
     // Update header
     _odometryMsg.header.seq = msg.header.seq;
@@ -53,14 +54,14 @@ void AgribotOdometryNode::caterpillarCallback(const agribot_msgs::AgribotCaterpi
   }
   else
   {
-    ROS_WARN("Skipping publication of odometry - one of theta angles not published yet");
+    ROS_WARN("One of theta angles not published yet");
   }
 }
 
 bool AgribotOdometryNode::updateDt(double newTimestamp)
 {
   // First message only sets timestamp for reference
-  if(!_bTimestampSet)
+  if (!_bTimestampSet)
   {
     _dPreviousTimestamp = newTimestamp;
     _bTimestampSet = true;
