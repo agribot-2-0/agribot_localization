@@ -15,7 +15,7 @@
               respawn="true" >
 
               <param name="world_frame" value="map" type="str"/>
-              <param name="transform_time_offset"   value="0.1" type="double"/>
+              <param name="transform_time_offset"   value="0.2" type="double"/>
               <param name="frequency" value="30" type="double"/>
               <param name="publish_tf" value="true" type="bool"/>
               <rosparam command="load" file="$(find agribot_localization)/params/common.yaml" />
@@ -32,7 +32,7 @@
               respawn="true" >
 
               <param name="world_frame" value="odom" type="str"/>
-              <param name="transform_time_offset"   value="0.1" type="double"/>
+              <param name="transform_time_offset"   value="0.2" type="double"/>
               <param name="frequency" value="30" type="double"/>
               <param name="publish_tf" value="true" type="bool"/>
               <rosparam command="load" file="$(find agribot_localization)/params/common.yaml" />
