@@ -65,6 +65,17 @@ add_dependencies(odometry_node ${catkin_EXPORTED_TARGETS})
 ## Install ##
 #############
 
+install(TARGETS
+  odometry_node
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(DIRECTORY launch params
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  PATTERN ".svn" EXCLUDE
+)
+
 #############
 ## Testing ##
 #############
