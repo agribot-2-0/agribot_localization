@@ -60,6 +60,10 @@ add_executable(odometry_node src/odometry_node.cpp src/AgribotOdometry.cpp src/A
 target_link_libraries(odometry_node ${catkin_LIBRARIES})
 add_dependencies(odometry_node ${catkin_EXPORTED_TARGETS})
 
+add_executable(odom_to_navsatfix_node src/odom_to_navsatfix_node.cpp src/OdomToNavSatFixNode.cpp)
+target_link_libraries(odom_to_navsatfix_node ${catkin_LIBRARIES})
+add_dependencies(odom_to_navsatfix_node ${catkin_EXPORTED_TARGETS})
+
 
 #############
 ## Install ##
@@ -67,6 +71,7 @@ add_dependencies(odometry_node ${catkin_EXPORTED_TARGETS})
 
 install(TARGETS
   odometry_node
+  odom_to_navsatfix_node
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
