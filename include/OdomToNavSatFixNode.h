@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include <ros/ros.h>
 #include <tf2/utils.h>
 #include <tf2_ros/transform_listener.h>
@@ -11,6 +9,8 @@
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/NavSatFix.h>
 #include <geometry_msgs/PointStamped.h>
+
+#include <string>
 
 class OdomToNavSatFixNode
 {
