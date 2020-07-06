@@ -1,4 +1,8 @@
-#include <OdomToNavSatFixNode.h>
+/*
+* Copyright (C) 2020 Agribot. All rights reserved.
+*/
+
+#include <agribot_localization/OdomToNavSatFixNode.h>
 
 int main(int argc, char **argv)
 {
