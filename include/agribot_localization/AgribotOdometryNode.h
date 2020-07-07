@@ -1,6 +1,10 @@
+/*
+* Copyright (C) 2020 Agribot. All rights reserved.
+*/
+
 #pragma once
 
-#include <AgribotOdometry.h>
+#include <agribot_localization/AgribotOdometry.h>
 #include <ros/ros.h>
 #include <tf2_ros/transform_listener.h>
 #include <tf2/utils.h>
