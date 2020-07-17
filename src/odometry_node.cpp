@@ -1,4 +1,8 @@
-#include <AgribotOdometryNode.h>
+/*
+* Copyright (C) 2020 Agribot. All rights reserved.
+*/
+
+#include <agribot_localization/AgribotOdometryNode.h>
 
 int main(int argc, char **argv)
 {

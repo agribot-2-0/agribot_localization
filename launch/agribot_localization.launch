@@ -1,6 +1,7 @@
 <launch>
   <!-- EKF/UKF selection -->
   <arg name="use_ukf" default="false" />
+  <arg name="sim"     default="false" />
 
   <!-- IMU filter -->
   <!-- <include file="$(find agribot_localization)/launch/imu_complementary_filter.launch" /> -->
@@ -16,5 +17,25 @@
   <include file="$(find agribot_localization)/launch/robot_localization.launch" >
     <arg name="use_ukf" value="$(arg use_ukf)" />
   </include>
+
+  <!-- Translation of estimated odometry for map->odom EKF -->
+  <remap from="odom_to_navsatfix_node_1/input_odometry" to="/agribot/odom/prefiltered"/>
+  <remap from="odom_to_navsatfix_node_1/translated_navsatfix" to="/agribot/map_odom_navsatfix"/>
+  <remap from="odom_to_navsatfix_node_1/input_navsatfix" to="/agribot/gnss"/>
+  <node pkg="agribot_localization" type="odom_to_navsatfix_node" name="odom_to_navsatfix_node_1" />
+
+  <!-- Translation of estimated odometry for odom->base_footprint EKF -->
+  <remap from="odom_to_navsatfix_node_2/input_odometry" to="/agribot/odom/estimated"/>
+  <remap from="odom_to_navsatfix_node_2/translated_navsatfix" to="/agribot/odom_base_navsatfix"/>
+  <remap from="odom_to_navsatfix_node_2/input_navsatfix" to="/agribot/gnss"/>
+  <node pkg="agribot_localization" type="odom_to_navsatfix_node" name="odom_to_navsatfix_node_2" />
+
+  <group if="$(arg sim)">
+    <!-- Translation of gazebo ground truth odometry -->
+    <remap from="odom_to_navsatfix_node_3/input_odometry" to="/agribot/odometry"/>
+    <remap from="odom_to_navsatfix_node_3/translated_navsatfix" to="/agribot/odom_ground_truth_navsatfix"/>
+    <remap from="odom_to_navsatfix_node_3/input_navsatfix" to="/agribot/gnss"/>
+    <node pkg="agribot_localization" type="odom_to_navsatfix_node" name="odom_to_navsatfix_node_3" />
+  </group>
 
 </launch>
