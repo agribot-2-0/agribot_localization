@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2020 Agribot. All rights reserved.
-*/
+ * Copyright (C) 2020 Agribot. All rights reserved.
+ */
 
 #pragma once
 
@@ -18,20 +18,20 @@
 
 class OdomToNavSatFixNode
 {
- private:
-    ros::NodeHandle *_nh;
-    ros::Publisher _navSatFixPub;
-    ros::Subscriber _odometrySub;
-    ros::Subscriber _realNavSub;
-    tf2_ros::Buffer _tf2Buffer;
-    tf2_ros::TransformListener _tf2Listener;
+private:
+  ros::NodeHandle* _nh;
+  ros::Publisher _navSatFixPub;
+  ros::Subscriber _odometrySub;
+  ros::Subscriber _realNavSub;
+  tf2_ros::Buffer _tf2Buffer;
+  tf2_ros::TransformListener _tf2Listener;
 
-    std::string _utmZone;
+  std::string _utmZone;
 
-    void odometryCallback(const nav_msgs::Odometry odomMsg);
-    void realNavSatFixCallback(const sensor_msgs::NavSatFix navSatFixMsg);
+  void odometryCallback(const nav_msgs::Odometry odomMsg);
+  void realNavSatFixCallback(const sensor_msgs::NavSatFix navSatFixMsg);
 
- public:
-    explicit OdomToNavSatFixNode(ros::NodeHandle *nh);
-    void run();
+public:
+  explicit OdomToNavSatFixNode(ros::NodeHandle* nh);
+  void run();
 };

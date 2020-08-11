@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2020 Agribot. All rights reserved.
-*/
+ * Copyright (C) 2020 Agribot. All rights reserved.
+ */
 
 #pragma once
 
@@ -12,34 +12,34 @@
 #include <nav_msgs/Odometry.h>
 #include <agribot_msgs/AgribotCaterpillar.h>
 
-static const float ORIENTATION_COVARIANCE   = 0.01;
-static const float POSITION_COVARIANCE      = 0.01;
-static const float LINEAR_VEL_X_COVARIANCE  = 0.0001;
-static const float LINEAR_VEL_Y_COVARIANCE  = 0.0001;
+static const float ORIENTATION_COVARIANCE = 0.01;
+static const float POSITION_COVARIANCE = 0.01;
+static const float LINEAR_VEL_X_COVARIANCE = 0.0001;
+static const float LINEAR_VEL_Y_COVARIANCE = 0.0001;
 static const float ANGULAR_VEL_Z_COVARIANCE = 0.0001;
 
 class AgribotOdometryNode
 {
- private:
-    ros::NodeHandle _nh;
-    ros::Subscriber _caterpillarSub;
-    ros::Subscriber _frontCartSub;
-    ros::Subscriber _backCartSub;
-    ros::Publisher _odometryPub;
-    nav_msgs::Odometry _odometryMsg;
+private:
+  ros::NodeHandle _nh;
+  ros::Subscriber _caterpillarSub;
+  ros::Subscriber _frontCartSub;
+  ros::Subscriber _backCartSub;
+  ros::Publisher _odometryPub;
+  nav_msgs::Odometry _odometryMsg;
 
-    AgribotOdometry _agribotOdom;
-    double _dPreviousTimestamp;
-    bool _bTimestampSet;
+  AgribotOdometry _agribotOdom;
+  double _dPreviousTimestamp;
+  bool _bTimestampSet;
 
-    void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
-    void frontCartCallback(const std_msgs::Float32 msg);
-    void backCartCallback(const std_msgs::Float32 msg);
+  void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
+  void frontCartCallback(const std_msgs::Float32 msg);
+  void backCartCallback(const std_msgs::Float32 msg);
 
-    void publishOdometry();
-    bool updateDt(double newTimestamp);
+  void publishOdometry();
+  bool updateDt(double newTimestamp);
 
- public:
-    AgribotOdometryNode();
-    void run();
+public:
+  AgribotOdometryNode();
+  void run();
 };

@@ -1,11 +1,10 @@
 /*
-* Copyright (C) 2020 Agribot. All rights reserved.
-*/
+ * Copyright (C) 2020 Agribot. All rights reserved.
+ */
 
 #include <agribot_localization/AgribotOdometryNode.h>
 
-AgribotOdometryNode::AgribotOdometryNode():
-  _bTimestampSet(false)
+AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false)
 {
   float wheelRadius, chassisLength;
 
@@ -23,22 +22,12 @@ AgribotOdometryNode::AgribotOdometryNode():
   _odometryMsg.header.frame_id = "odom";
   _odometryMsg.child_frame_id = "base_footprint";
 
-  _caterpillarSub = _nh.subscribe("agribot/encoder/caterpillar",
-                                  1,
-                                  &AgribotOdometryNode::caterpillarCallback,
-                                  this);
-  _frontCartSub = _nh.subscribe("agribot/encoder/cart/front",
-                                1,
-                                &AgribotOdometryNode::frontCartCallback,
-                                this);
-  _backCartSub = _nh.subscribe("agribot/encoder/cart/back",
-                              1,
-                              &AgribotOdometryNode::backCartCallback,
-                              this);
+  _caterpillarSub = _nh.subscribe("agribot/encoder/caterpillar", 1, &AgribotOdometryNode::caterpillarCallback, this);
+  _frontCartSub = _nh.subscribe("agribot/encoder/cart/front", 1, &AgribotOdometryNode::frontCartCallback, this);
+  _backCartSub = _nh.subscribe("agribot/encoder/cart/back", 1, &AgribotOdometryNode::backCartCallback, this);
 }
 
-void AgribotOdometryNode::caterpillarCallback(
-    const agribot_msgs::AgribotCaterpillar msg)
+void AgribotOdometryNode::caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg)
 {
   _agribotOdom.vSetEta1(msg.front_linear);
 
