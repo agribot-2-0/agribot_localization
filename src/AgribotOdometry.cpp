@@ -1,22 +1,22 @@
 /*
-* Copyright (C) 2020 Agribot. All rights reserved.
-*/
+ * Copyright (C) 2020 Agribot. All rights reserved.
+ */
 
 #include <agribot_localization/AgribotOdometry.h>
 #include <ros/ros.h>
 
-AgribotOdometry::AgribotOdometry():
-  _fWheelRadius(DEFAULT_WHEEL_RADIUS),
-  _fChassisLength(DEFAULT_CHASSIS_LENGTH),
-  _bTheta0Received(true),         // On default theta0 is internal state
-  _bTheta1Received(false),
-  _bTheta2Received(false),
-  _bDtSet(false),
-  _fX(0.0),
-  _fY(0.0),
-  _fTheta0(0.0),
-  _fTheta1(0.0),
-  _fTheta2(0.0)
+AgribotOdometry::AgribotOdometry()
+  : _fWheelRadius(DEFAULT_WHEEL_RADIUS)
+  , _fChassisLength(DEFAULT_CHASSIS_LENGTH)
+  , _bTheta0Received(true)  // On default theta0 is internal state
+  , _bTheta1Received(false)
+  , _bTheta2Received(false)
+  , _bDtSet(false)
+  , _fX(0.0)
+  , _fY(0.0)
+  , _fTheta0(0.0)
+  , _fTheta1(0.0)
+  , _fTheta2(0.0)
 {
 }
 
@@ -74,17 +74,17 @@ void AgribotOdometry::vUpdateVelocities()
 
 void AgribotOdometry::vUpdatePositions()
 {
-  _fX   += _fLinearVelocityX  * _dDt;
-  _fY   += _fLinearVelocityY  * _dDt;
+  _fX += _fLinearVelocityX * _dDt;
+  _fY += _fLinearVelocityY * _dDt;
   _fTheta0 += _fAngularVelocityZ * _dDt;
 
   if (_fTheta0 < -M_PI)
   {
-    _fTheta0 += (2*M_PI);
+    _fTheta0 += (2 * M_PI);
   }
   else if (_fTheta0 > M_PI)
   {
-    _fTheta0 -= (2*M_PI);
+    _fTheta0 -= (2 * M_PI);
   }
 }
 

@@ -1,19 +1,20 @@
 <launch>
 
-    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true">
+  <arg name="navsat_transform_magnetic_declination_radians" default="0.0" />
 
-      <!-- <param name="magnetic_declination_radians" value="0"/> -->
-      <param name="magnetic_declination_radians" value="0"/>
-      <param name="yaw_offset" value="0"/>
-      <param name="broadcast_utm_transform" value="true"/>
-      <param name="use_odometry_yaw" value="false"/>
-      <param name="zero_altitude" value="true"/>
+  <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true">
 
-      <remap from="imu/data" to="agribot/imu/filtered" />
-      <remap from="gps/fix" to="agribot/gnss" />
-      <remap from="odometry/filtered" to="agribot/odom/prefiltered" />
-      <remap from="odometry/gps" to="agribot/odom/gps" />
+    <param name="magnetic_declination_radians" value="$(arg navsat_transform_magnetic_declination_radians)" />
+    <param name="yaw_offset" value="0" />
+    <param name="broadcast_utm_transform" value="true" />
+    <param name="use_odometry_yaw" value="false" />
+    <param name="zero_altitude" value="true" />
 
-    </node>
+    <remap from="imu/data" to="agribot/imu/filtered" />
+    <remap from="gps/fix" to="agribot/gnss" />
+    <remap from="odometry/filtered" to="agribot/odom/prefiltered" />
+    <remap from="odometry/gps" to="agribot/odom/gps" />
+
+  </node>
 
 </launch>
