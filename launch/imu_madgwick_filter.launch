@@ -9,7 +9,7 @@
     <param name="use_mag"                 value="true" type="bool"/>
     <param name="use_magnetic_field_msg"  value="true" type="bool"/>
 
-    <param name="gain"                    value="0.1" type="double"/>
+    <param name="gain"                    value="0.01" type="double"/>
     <param name="zeta"                    value="0.01" type="double"/>
 
     <param name="mag_bias_x"              value="0.00" type="double"/>

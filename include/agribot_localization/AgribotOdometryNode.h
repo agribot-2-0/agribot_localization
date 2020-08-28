@@ -5,12 +5,13 @@
 #pragma once
 
 #include <agribot_localization/AgribotOdometry.h>
-#include <ros/ros.h>
-#include <tf2_ros/transform_listener.h>
-#include <tf2/utils.h>
-#include <std_msgs/Float32.h>
-#include <nav_msgs/Odometry.h>
 #include <agribot_msgs/AgribotCaterpillar.h>
+#include <agribot_msgs/AgribotCaterpillarWheels.h>
+#include <nav_msgs/Odometry.h>
+#include <ros/ros.h>
+#include <std_msgs/Float32.h>
+#include <tf2/utils.h>
+#include <tf2_ros/transform_listener.h>
 
 class AgribotOdometryNode
 {
@@ -19,8 +20,11 @@ private:
   ros::Subscriber _caterpillarSub;
   ros::Subscriber _frontCartSub;
   ros::Subscriber _backCartSub;
+  ros::Subscriber _caterpillarWheelsSub;
   ros::Publisher _odometryPub;
+  ros::Publisher _odometryWheelsPub;
   nav_msgs::Odometry _odometryMsg;
+  nav_msgs::Odometry _odometryWheelMsg;
 
   AgribotOdometry _agribotOdom;
   double _dPreviousTimestamp;
@@ -32,9 +36,24 @@ private:
   float _fLinearVelocityYCovariance;
   float _fAngularVelocityZCovariance;
 
+  float x = 0;
+  float y = 0;
+  float theta = 0;
+  int32_t front_left_last = 0;
+  int32_t front_right_last = 0;
+  bool firstMessage = true;
+
+  static constexpr float wheel_diameter = 0.32;  // m
+  static constexpr float impulses_per_wheel = 1024;
+  static constexpr float wheelbase = 1.05;
+  static constexpr float impulses_max = 4294967296;
+
   void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
+  void caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheels msg);
   void frontCartCallback(const std_msgs::Float32 msg);
   void backCartCallback(const std_msgs::Float32 msg);
+
+  float limitDiff(float encoder_diff);
 
   void publishOdometry();
   bool updateDt(double newTimestamp);

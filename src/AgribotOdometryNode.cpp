@@ -88,12 +88,90 @@ AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
   }
 
   _odometryPub = _nh.advertise<nav_msgs::Odometry>("odom/raw", 10);
+  _odometryWheelsPub = _nh.advertise<nav_msgs::Odometry>("odom/raw/wheels", 10);
   _odometryMsg.header.frame_id = "odom";
   _odometryMsg.child_frame_id = "base_footprint";
 
   _caterpillarSub = _nh.subscribe("encoder/caterpillar", 1, &AgribotOdometryNode::caterpillarCallback, this);
   _frontCartSub = _nh.subscribe("encoder/cart/front", 1, &AgribotOdometryNode::frontCartCallback, this);
   _backCartSub = _nh.subscribe("encoder/cart/back", 1, &AgribotOdometryNode::backCartCallback, this);
+  _caterpillarWheelsSub =
+      _nh.subscribe("encoder/caterpillar/wheels", 1, &AgribotOdometryNode::caterpillarWheelsCallback, this);
+}
+
+void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheels msg)
+{
+  if (firstMessage)
+  {
+    front_right_last = msg.front_right;
+    front_left_last = msg.front_left;
+    firstMessage = false;
+  }
+  int32_t front_right_diff = msg.front_right - front_right_last;
+  int32_t front_left_diff = msg.front_left - front_left_last;
+
+  // front_right_diff = limitDiff(front_right_diff);
+  // front_left_diff = limitDiff(front_left_diff);
+
+  front_right_last = msg.front_right;
+  front_left_last = msg.front_left;
+
+  float dfr = (M_PI * wheel_diameter * front_right_diff) / impulses_per_wheel;
+  float dfl = (M_PI * wheel_diameter * front_left_diff) / impulses_per_wheel;
+
+  float dfc = (dfr + dfl) / 2;
+  float dtheta = (dfr - dfl) / wheelbase;
+
+  ROS_WARN_STREAM("dfr " << dfr << " dfl " << dfl);
+  ROS_WARN_STREAM("dfc " << dfc << " dtheta " << dtheta);
+
+  // x += dfc * cos(theta);
+  // y += dfc * sin(theta);
+
+  ROS_WARN_STREAM("diff " << front_right_diff - front_left_diff);
+  if (abs(front_right_diff - front_left_diff) < 1)
+  {
+    x += dfl * cos(theta);
+    y += dfr * sin(theta);
+  }
+  else
+  {
+    float icc = dfc / dtheta;
+    x += icc * sin(dtheta + theta) - icc * sin(theta);
+    y += -icc * cos(dtheta + theta) + icc * cos(theta);
+    theta += dtheta;
+    ROS_WARN_STREAM("icc " << icc);
+  }
+
+  _odometryMsg.header.stamp = ros::Time::now();
+
+  _odometryWheelMsg.header.frame_id = "odom";
+  _odometryWheelMsg.child_frame_id = "base_footprint";
+  // X,Y
+  _odometryWheelMsg.pose.pose.position.x = x;
+  _odometryWheelMsg.pose.pose.position.y = y;
+  // Yaw
+  tf2::Quaternion quat;
+  quat.setRPY(0, 0, theta);
+  _odometryWheelMsg.pose.pose.orientation = tf2::toMsg(quat);
+  // Pose covariance
+  _odometryWheelMsg.pose.covariance[0] = _fPositionCovariance;
+  _odometryWheelMsg.pose.covariance[7] = _fPositionCovariance;
+  _odometryWheelMsg.pose.covariance[35] = _fOrientationCovariance;
+
+  _odometryWheelsPub.publish(_odometryWheelMsg);
+}
+
+float AgribotOdometryNode::limitDiff(float encoder_diff)
+{
+  if (abs(encoder_diff) > (impulses_max / 2))
+  {
+    return abs(encoder_diff) - impulses_max;
+  }
+  else
+  {
+    return encoder_diff;
+  }
 }
 
 void AgribotOdometryNode::caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg)
