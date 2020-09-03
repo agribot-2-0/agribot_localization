@@ -107,8 +107,8 @@ void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotC
     front_left_last = msg.front_left;
     firstMessage = false;
   }
-  int32_t front_right_diff = msg.front_right - front_right_last;
-  int32_t front_left_diff = msg.front_left - front_left_last;
+  double front_right_diff = msg.front_right - front_right_last;
+  double front_left_diff = msg.front_left - front_left_last;
 
   // front_right_diff = limitDiff(front_right_diff);
   // front_left_diff = limitDiff(front_left_diff);
@@ -116,20 +116,18 @@ void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotC
   front_right_last = msg.front_right;
   front_left_last = msg.front_left;
 
-  float dfr = (M_PI * wheel_diameter * front_right_diff) / impulses_per_wheel;
-  float dfl = (M_PI * wheel_diameter * front_left_diff) / impulses_per_wheel;
+  double dfr = (wheel_diameter / 2 * front_right_diff);
+  double dfl = (wheel_diameter / 2 * front_left_diff);
 
-  float dfc = (dfr + dfl) / 2;
-  float dtheta = (dfr - dfl) / wheelbase;
+  double dfc = (dfr + dfl) / 2;
+  double dtheta = (dfr - dfl) / wheelbase;
 
-  ROS_WARN_STREAM("dfr " << dfr << " dfl " << dfl);
-  ROS_WARN_STREAM("dfc " << dfc << " dtheta " << dtheta);
+  // ROS_WARN_STREAM("dfr " << dfr << " dfl " << dfl);
+  // ROS_WARN_STREAM("dfc " << dfc << " dtheta " << dtheta);
 
   // x += dfc * cos(theta);
   // y += dfc * sin(theta);
-
-  ROS_WARN_STREAM("diff " << front_right_diff - front_left_diff);
-  if (abs(front_right_diff - front_left_diff) < 1)
+  if (abs(dtheta) < 1e-6)
   {
     x += dfl * cos(theta);
     y += dfr * sin(theta);
@@ -140,7 +138,7 @@ void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotC
     x += icc * sin(dtheta + theta) - icc * sin(theta);
     y += -icc * cos(dtheta + theta) + icc * cos(theta);
     theta += dtheta;
-    ROS_WARN_STREAM("icc " << icc);
+    // ROS_WARN_STREAM("icc " << icc);
   }
 
   _odometryMsg.header.stamp = ros::Time::now();

@@ -36,17 +36,17 @@ private:
   float _fLinearVelocityYCovariance;
   float _fAngularVelocityZCovariance;
 
-  float x = 0;
-  float y = 0;
-  float theta = 0;
-  int32_t front_left_last = 0;
-  int32_t front_right_last = 0;
+  double x = 0;
+  double y = 0;
+  double theta = 0;
+  double front_left_last = 0;
+  double front_right_last = 0;
   bool firstMessage = true;
 
-  static constexpr float wheel_diameter = 0.32;  // m
-  static constexpr float impulses_per_wheel = 1024;
-  static constexpr float wheelbase = 1.05;
-  static constexpr float impulses_max = 4294967296;
+  static constexpr double wheel_diameter = 0.32;  // m
+  // static constexpr double impulses_per_wheel = 1024;
+  static constexpr double wheelbase = 0.8;
+  static constexpr double impulses_max = 4294967296;
 
   void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
   void caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheels msg);
