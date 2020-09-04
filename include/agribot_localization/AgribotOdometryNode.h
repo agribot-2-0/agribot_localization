@@ -36,6 +36,9 @@ private:
   float _fLinearVelocityYCovariance;
   float _fAngularVelocityZCovariance;
 
+  double _wheelDiameter;  // m
+  double _wheelbase;      // m
+
   double x = 0;
   double y = 0;
   double theta = 0;
@@ -43,17 +46,10 @@ private:
   double front_right_last = 0;
   bool firstMessage = true;
 
-  static constexpr double wheel_diameter = 0.32;  // m
-  // static constexpr double impulses_per_wheel = 1024;
-  static constexpr double wheelbase = 0.8;
-  static constexpr double impulses_max = 4294967296;
-
   void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
   void caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheels msg);
   void frontCartCallback(const std_msgs::Float32 msg);
   void backCartCallback(const std_msgs::Float32 msg);
-
-  float limitDiff(float encoder_diff);
 
   void publishOdometry();
   bool updateDt(double newTimestamp);

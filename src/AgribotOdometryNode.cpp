@@ -11,11 +11,23 @@ AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
   if (_nh.hasParam("wheel_radius"))
   {
     _nh.getParam("wheel_radius", wheelRadius);
+    _wheelDiameter = 2 * wheelRadius;
     _agribotOdom.vSetWheelRadius(wheelRadius);
   }
   else
   {
     ROS_FATAL_STREAM("[Agribot Odometry Node] Missing wheel_radius parameter. Exiting...");
+    _nh.shutdown();
+    exit(0);
+  }
+
+  if (_nh.hasParam("wheelbase"))
+  {
+    _nh.getParam("wheelbase", _wheelbase);
+  }
+  else
+  {
+    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing wheelbase parameter. Exiting...");
     _nh.shutdown();
     exit(0);
   }
@@ -92,6 +104,14 @@ AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
   _odometryMsg.header.frame_id = "odom";
   _odometryMsg.child_frame_id = "base_footprint";
 
+  _odometryWheelMsg.header.frame_id = "odom";
+  _odometryWheelMsg.child_frame_id = "base_footprint";
+
+  // Pose covariance
+  _odometryWheelMsg.pose.covariance[0] = _fPositionCovariance;
+  _odometryWheelMsg.pose.covariance[7] = _fPositionCovariance;
+  _odometryWheelMsg.pose.covariance[35] = _fOrientationCovariance;
+
   _caterpillarSub = _nh.subscribe("encoder/caterpillar", 1, &AgribotOdometryNode::caterpillarCallback, this);
   _frontCartSub = _nh.subscribe("encoder/cart/front", 1, &AgribotOdometryNode::frontCartCallback, this);
   _backCartSub = _nh.subscribe("encoder/cart/back", 1, &AgribotOdometryNode::backCartCallback, this);
@@ -110,17 +130,14 @@ void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotC
   double front_right_diff = msg.front_right - front_right_last;
   double front_left_diff = msg.front_left - front_left_last;
 
-  // front_right_diff = limitDiff(front_right_diff);
-  // front_left_diff = limitDiff(front_left_diff);
-
   front_right_last = msg.front_right;
   front_left_last = msg.front_left;
 
-  double dfr = (wheel_diameter / 2 * front_right_diff);
-  double dfl = (wheel_diameter / 2 * front_left_diff);
+  double dfr = (_wheelDiameter / 2 * front_right_diff);
+  double dfl = (_wheelDiameter / 2 * front_left_diff);
 
   double dfc = (dfr + dfl) / 2;
-  double dtheta = (dfr - dfl) / wheelbase;
+  double dtheta = (dfr - dfl) / _wheelbase;
 
   // ROS_WARN_STREAM("dfr " << dfr << " dfl " << dfl);
   // ROS_WARN_STREAM("dfc " << dfc << " dtheta " << dtheta);
@@ -134,7 +151,7 @@ void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotC
   }
   else
   {
-    float icc = dfc / dtheta;
+    double icc = dfc / dtheta;
     x += icc * sin(dtheta + theta) - icc * sin(theta);
     y += -icc * cos(dtheta + theta) + icc * cos(theta);
     theta += dtheta;
@@ -143,8 +160,6 @@ void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotC
 
   _odometryMsg.header.stamp = ros::Time::now();
 
-  _odometryWheelMsg.header.frame_id = "odom";
-  _odometryWheelMsg.child_frame_id = "base_footprint";
   // X,Y
   _odometryWheelMsg.pose.pose.position.x = x;
   _odometryWheelMsg.pose.pose.position.y = y;
@@ -152,24 +167,8 @@ void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotC
   tf2::Quaternion quat;
   quat.setRPY(0, 0, theta);
   _odometryWheelMsg.pose.pose.orientation = tf2::toMsg(quat);
-  // Pose covariance
-  _odometryWheelMsg.pose.covariance[0] = _fPositionCovariance;
-  _odometryWheelMsg.pose.covariance[7] = _fPositionCovariance;
-  _odometryWheelMsg.pose.covariance[35] = _fOrientationCovariance;
 
   _odometryWheelsPub.publish(_odometryWheelMsg);
-}
-
-float AgribotOdometryNode::limitDiff(float encoder_diff)
-{
-  if (abs(encoder_diff) > (impulses_max / 2))
-  {
-    return abs(encoder_diff) - impulses_max;
-  }
-  else
-  {
-    return encoder_diff;
-  }
 }
 
 void AgribotOdometryNode::caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg)
