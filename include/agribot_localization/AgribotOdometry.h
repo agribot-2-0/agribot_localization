@@ -5,6 +5,7 @@
 #pragma once
 
 #include <agribot_common/AgribotComponent.h>
+
 #include <cmath>
 
 static const float DEFAULT_WHEEL_RADIUS = 0.16;
@@ -35,6 +36,13 @@ private:
   bool _bTheta2Received;
   bool _bDtSet;
 
+  double _fXWheel = 0;
+  double _fYWheel = 0;
+  double _fThetaWheel = 0;
+
+  double _wheelDiameter;  // m
+  double _wheelbase;      // m
+
 public:
   AgribotOdometry();
   virtual int configure();
@@ -45,12 +53,14 @@ public:
 
   void vUpdateVelocities();
   void vUpdatePositions();
+  void vUpdatePositionsWheels(double front_right_radians_diff, double front_left_radians_diff);
 
   void vSetTheta0(float value);
   void vSetTheta1(float value);
   void vSetTheta2(float value);
   void vSetEta1(float value);
   void vSetWheelRadius(float value);
+  void vSetWheelbase(double value);
   void vSetChassisLength(float value);
   void vSetDt(float value);
 
@@ -63,6 +73,10 @@ public:
 
   float fGetX();
   float fGetY();
+
+  double fGetXWheel();
+  double fGetYWheel();
+  double fGetThetaWheel();
 
   float fGetLinearVelocityX();
   float fGetLinearVelocityY();

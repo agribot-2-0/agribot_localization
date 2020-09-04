@@ -88,6 +88,28 @@ void AgribotOdometry::vUpdatePositions()
   }
 }
 
+void AgribotOdometry::vUpdatePositionsWheels(double front_right_radians_diff, double front_left_radians_diff)
+{
+  double dfr = (_wheelDiameter / 2 * front_right_radians_diff);
+  double dfl = (_wheelDiameter / 2 * front_left_radians_diff);
+
+  double dfc = (dfr + dfl) / 2;
+  double dtheta = (dfr - dfl) / _wheelbase;
+
+  if (abs(dtheta) < 1e-6)
+  {
+    _fXWheel += dfl * cos(_fThetaWheel);
+    _fYWheel += dfr * sin(_fThetaWheel);
+  }
+  else
+  {
+    double icc = dfc / dtheta;
+    _fXWheel += icc * sin(dtheta + _fThetaWheel) - icc * sin(_fThetaWheel);
+    _fYWheel += -icc * cos(dtheta + _fThetaWheel) + icc * cos(_fThetaWheel);
+    _fThetaWheel += dtheta;
+  }
+}
+
 void AgribotOdometry::vSetTheta0(float value)
 {
   _fTheta0 = value + THETA0_OFFSET;
@@ -114,6 +136,12 @@ void AgribotOdometry::vSetEta1(float value)
 void AgribotOdometry::vSetWheelRadius(float value)
 {
   _fWheelRadius = value;
+  _wheelDiameter = 2 * value;
+}
+
+void AgribotOdometry::vSetWheelbase(double value)
+{
+  _wheelbase = value;
 }
 
 void AgribotOdometry::vSetChassisLength(float value)
@@ -165,6 +193,19 @@ float AgribotOdometry::fGetX()
 float AgribotOdometry::fGetY()
 {
   return _fY;
+}
+
+double AgribotOdometry::fGetXWheel()
+{
+  return _fXWheel;
+}
+double AgribotOdometry::fGetYWheel()
+{
+  return _fYWheel;
+}
+double AgribotOdometry::fGetThetaWheel()
+{
+  return _fThetaWheel;
 }
 
 float AgribotOdometry::fGetLinearVelocityX()

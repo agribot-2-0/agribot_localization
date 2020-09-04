@@ -6,12 +6,11 @@
 
 AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
 {
-  float wheelRadius, chassisLength;
+  float wheelRadius, chassisLength, wheelbase;
 
   if (_nh.hasParam("wheel_radius"))
   {
     _nh.getParam("wheel_radius", wheelRadius);
-    _wheelDiameter = 2 * wheelRadius;
     _agribotOdom.vSetWheelRadius(wheelRadius);
   }
   else
@@ -23,7 +22,8 @@ AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
 
   if (_nh.hasParam("wheelbase"))
   {
-    _nh.getParam("wheelbase", _wheelbase);
+    _nh.getParam("wheelbase", wheelbase);
+    _agribotOdom.vSetWheelbase(wheelbase);
   }
   else
   {
@@ -133,39 +133,18 @@ void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotC
   front_right_last = msg.front_right;
   front_left_last = msg.front_left;
 
-  double dfr = (_wheelDiameter / 2 * front_right_diff);
-  double dfl = (_wheelDiameter / 2 * front_left_diff);
+  ROS_WARN_STREAM("front_right_diff " << front_right_diff << " front_left_diff " << front_left_diff);
 
-  double dfc = (dfr + dfl) / 2;
-  double dtheta = (dfr - dfl) / _wheelbase;
-
-  // ROS_WARN_STREAM("dfr " << dfr << " dfl " << dfl);
-  // ROS_WARN_STREAM("dfc " << dfc << " dtheta " << dtheta);
-
-  // x += dfc * cos(theta);
-  // y += dfc * sin(theta);
-  if (abs(dtheta) < 1e-6)
-  {
-    x += dfl * cos(theta);
-    y += dfr * sin(theta);
-  }
-  else
-  {
-    double icc = dfc / dtheta;
-    x += icc * sin(dtheta + theta) - icc * sin(theta);
-    y += -icc * cos(dtheta + theta) + icc * cos(theta);
-    theta += dtheta;
-    // ROS_WARN_STREAM("icc " << icc);
-  }
+  _agribotOdom.vUpdatePositionsWheels(front_right_diff, front_left_diff);
 
   _odometryMsg.header.stamp = ros::Time::now();
 
   // X,Y
-  _odometryWheelMsg.pose.pose.position.x = x;
-  _odometryWheelMsg.pose.pose.position.y = y;
+  _odometryWheelMsg.pose.pose.position.x = _agribotOdom.fGetXWheel();
+  _odometryWheelMsg.pose.pose.position.y = _agribotOdom.fGetYWheel();
   // Yaw
   tf2::Quaternion quat;
-  quat.setRPY(0, 0, theta);
+  quat.setRPY(0, 0, _agribotOdom.fGetThetaWheel());
   _odometryWheelMsg.pose.pose.orientation = tf2::toMsg(quat);
 
   _odometryWheelsPub.publish(_odometryWheelMsg);

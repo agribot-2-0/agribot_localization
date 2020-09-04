@@ -36,12 +36,6 @@ private:
   float _fLinearVelocityYCovariance;
   float _fAngularVelocityZCovariance;
 
-  double _wheelDiameter;  // m
-  double _wheelbase;      // m
-
-  double x = 0;
-  double y = 0;
-  double theta = 0;
   double front_left_last = 0;
   double front_right_last = 0;
   bool firstMessage = true;
