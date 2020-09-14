@@ -133,11 +133,11 @@ void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotC
   front_right_last = msg.front_right;
   front_left_last = msg.front_left;
 
-  if (front_right_diff < 1e-5)
+  if (fabs(front_right_diff) < 1e-5)
   {
     front_right_diff = 0;
   }
-  if (front_left_diff < 1e-5)
+  if (fabs(front_left_diff) < 1e-5)
   {
     front_left_diff = 0;
   }
