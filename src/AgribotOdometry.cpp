@@ -68,7 +68,7 @@ void AgribotOdometry::vUpdateVelocities()
 
   // Based on new formulas (complying to ROS coordinates)
   _fLinearVelocityX = _fEta1 * (c01 + (s0 * s1_2 / 2.0 / c2));
-  _fLinearVelocityY = _fEta1 * (s01 - (s0 * s1_2 / 2.0 / c2));
+  _fLinearVelocityY = _fEta1 * (s01 - (c0 * s1_2 / 2.0 / c2));
   _fAngularVelocityZ = _fEta1 * s1_2 / c2 / _fChassisLength;
 }
 
@@ -94,19 +94,24 @@ void AgribotOdometry::vUpdatePositionsWheels(double front_right_radians_diff, do
   double dfl = (_wheelDiameter / 2 * front_left_radians_diff);
 
   double dfc = (dfr + dfl) / 2;
-  double dtheta = (dfr - dfl) / _wheelbase;
 
-  if (abs(dtheta) < 1e-6)
+  double dx =
+      dfc * (cos(_fThetaWheel + _fTheta1) + (sin(_fThetaWheel) * sin(_fTheta1 - _fTheta2) / 2.0 / cos(_fTheta2)));
+  double dy =
+      dfc * (sin(_fThetaWheel + _fTheta1) - (cos(_fThetaWheel) * sin(_fTheta1 - _fTheta2) / 2.0 / cos(_fTheta2)));
+  double wz = dfc * sin(_fTheta1 - _fTheta2) / cos(_fTheta2) / _fChassisLength;
+
+  _fXWheel += dx;
+  _fYWheel += dy;
+  _fThetaWheel += wz;
+
+  if (_fThetaWheel < -M_PI)
   {
-    _fXWheel += dfl * cos(_fThetaWheel);
-    _fYWheel += dfr * sin(_fThetaWheel);
+    _fThetaWheel += (2 * M_PI);
   }
-  else
+  else if (_fThetaWheel > M_PI)
   {
-    double icc = dfc / dtheta;
-    _fXWheel += icc * sin(dtheta + _fThetaWheel) - icc * sin(_fThetaWheel);
-    _fYWheel += -icc * cos(dtheta + _fThetaWheel) + icc * cos(_fThetaWheel);
-    _fThetaWheel += dtheta;
+    _fThetaWheel -= (2 * M_PI);
   }
 }
 

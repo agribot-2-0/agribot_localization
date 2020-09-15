@@ -38,6 +38,9 @@ private:
 
   double front_left_last = 0;
   double front_right_last = 0;
+  double back_left_last = 0;
+  double back_right_last = 0;
+  double timestamp_last = 0;
   bool firstMessage = true;
 
   void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
