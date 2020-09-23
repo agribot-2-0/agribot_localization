@@ -142,20 +142,11 @@ void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotC
   back_left_last = msg.back_left;
   timestamp_last = msg.header.stamp.toSec();
 
-  // if (fabs(front_right_diff) < 1e-5)
-  // {
-  //   front_right_diff = 0;
-  // }
-  // if (fabs(front_left_diff) < 1e-5)
-  // {
-  //   front_left_diff = 0;
-  // }
-
   // ROS_WARN_STREAM("front_right_diff " << front_right_diff << " front_left_diff " << front_left_diff);
 
   _agribotOdom.vUpdatePositionsWheels(front_right_diff, front_left_diff);
 
-  _odometryMsg.header.stamp = ros::Time::now();
+  _odometryWheelMsg.header.stamp = ros::Time::now();
 
   // X,Y
   _odometryWheelMsg.pose.pose.position.x = _agribotOdom.fGetXWheel();
