@@ -90,8 +90,8 @@ void AgribotOdometry::vUpdatePositions()
 
 void AgribotOdometry::vUpdatePositionsWheels(double front_right_radians_diff, double front_left_radians_diff)
 {
-  double dfr = (_wheelDiameter / 2 * front_right_radians_diff);
-  double dfl = (_wheelDiameter / 2 * front_left_radians_diff);
+  double dfr = (_fWheelRadius * front_right_radians_diff);
+  double dfl = (_fWheelRadius * front_left_radians_diff);
 
   double dfc = (dfr + dfl) / 2;
 
