@@ -6,7 +6,7 @@
 
 #include <agribot_localization/AgribotOdometry.h>
 #include <agribot_msgs/AgribotCaterpillar.h>
-#include <agribot_msgs/AgribotCaterpillarWheels.h>
+#include <agribot_msgs/AgribotCaterpillarWheelsRotation.h>
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
 #include <std_msgs/Float32.h>
@@ -44,7 +44,7 @@ private:
   bool firstMessage = true;
 
   void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
-  void caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheels msg);
+  void caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheelsRotation msg);
   void frontCartCallback(const std_msgs::Float32 msg);
   void backCartCallback(const std_msgs::Float32 msg);
 

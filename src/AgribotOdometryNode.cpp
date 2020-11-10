@@ -119,7 +119,7 @@ AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
       _nh.subscribe("encoder/caterpillar/wheels", 1, &AgribotOdometryNode::caterpillarWheelsCallback, this);
 }
 
-void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheels msg)
+void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheelsRotation msg)
 {
   if (firstMessage)
   {
