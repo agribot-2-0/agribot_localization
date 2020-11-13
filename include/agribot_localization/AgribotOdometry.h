@@ -16,6 +16,13 @@ static const float THETA0_OFFSET = 0.0;
 static const float THETA1_OFFSET = 0.0;
 static const float THETA2_OFFSET = M_PI;
 
+struct agribotVelocities
+{
+  float fLinearVelocityX;
+  float fLinearVelocityY;
+  float fAngularVelocityZ;
+};
+
 class AgribotOdometry : public AgribotComponent
 {
 private:
@@ -27,9 +34,8 @@ private:
   float _fChassisLength;
   float _fX;
   float _fY;
-  float _fLinearVelocityX;
-  float _fLinearVelocityY;
-  float _fAngularVelocityZ;
+  agribotVelocities _agribot_velocities;
+
   double _dDt;
   bool _bTheta0Received;
   bool _bTheta1Received;
@@ -42,6 +48,8 @@ private:
 
   double _wheelDiameter;  // m
   double _wheelbase;      // m
+
+  agribotVelocities computeVelocities(float eta1, float theta0, float theta1, float theta2);
 
 public:
   AgribotOdometry();

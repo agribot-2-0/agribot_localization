@@ -58,25 +58,34 @@ bool AgribotOdometry::cleanup()
 
 void AgribotOdometry::vUpdateVelocities()
 {
-  float s0 = sin(_fTheta0);
-  float c0 = cos(_fTheta0);
-  float s2 = sin(_fTheta2);
-  float c2 = cos(_fTheta2);
-  float s01 = sin(_fTheta0 + _fTheta1);
-  float c01 = cos(_fTheta0 + _fTheta1);
-  float s1_2 = sin(_fTheta1 - _fTheta2);
+  _agribot_velocities = computeVelocities(_fEta1, _fTheta0, _fTheta1, _fTheta2);
+}
+
+agribotVelocities AgribotOdometry::computeVelocities(float eta1, float theta0, float theta1, float theta2)
+{
+  agribotVelocities agribot_velocities;
+
+  float s0 = sin(theta0);
+  float c0 = cos(theta0);
+  float s2 = sin(theta2);
+  float c2 = cos(theta2);
+  float s01 = sin(theta0 + theta1);
+  float c01 = cos(theta0 + theta1);
+  float s1_2 = sin(theta1 - theta2);
 
   // Based on new formulas (complying to ROS coordinates)
-  _fLinearVelocityX = _fEta1 * (c01 + (s0 * s1_2 / 2.0 / c2));
-  _fLinearVelocityY = _fEta1 * (s01 - (c0 * s1_2 / 2.0 / c2));
-  _fAngularVelocityZ = _fEta1 * s1_2 / c2 / _fChassisLength;
+  agribot_velocities.fLinearVelocityX = eta1 * (c01 + (s0 * s1_2 / 2.0 / c2));
+  agribot_velocities.fLinearVelocityY = eta1 * (s01 - (c0 * s1_2 / 2.0 / c2));
+  agribot_velocities.fAngularVelocityZ = eta1 * s1_2 / c2 / _fChassisLength;
+
+  return agribot_velocities;
 }
 
 void AgribotOdometry::vUpdatePositions()
 {
-  _fX += _fLinearVelocityX * _dDt;
-  _fY += _fLinearVelocityY * _dDt;
-  _fTheta0 += _fAngularVelocityZ * _dDt;
+  _fX += _agribot_velocities.fLinearVelocityX * _dDt;
+  _fY += _agribot_velocities.fLinearVelocityY * _dDt;
+  _fTheta0 += _agribot_velocities.fAngularVelocityZ * _dDt;
 
   if (_fTheta0 < -M_PI)
   {
@@ -90,20 +99,16 @@ void AgribotOdometry::vUpdatePositions()
 
 void AgribotOdometry::vUpdatePositionsWheels(double front_right_radians_diff, double front_left_radians_diff)
 {
-  double dfr = (_fWheelRadius * front_right_radians_diff);
-  double dfl = (_fWheelRadius * front_left_radians_diff);
+  double distance_front_right = (_fWheelRadius * front_right_radians_diff);
+  double distance_front_left = (_fWheelRadius * front_left_radians_diff);
 
-  double dfc = (dfr + dfl) / 2;
+  double distance_front_center = (distance_front_right + distance_front_left) / 2;
 
-  double dx =
-      dfc * (cos(_fThetaWheel + _fTheta1) + (sin(_fThetaWheel) * sin(_fTheta1 - _fTheta2) / 2.0 / cos(_fTheta2)));
-  double dy =
-      dfc * (sin(_fThetaWheel + _fTheta1) - (cos(_fThetaWheel) * sin(_fTheta1 - _fTheta2) / 2.0 / cos(_fTheta2)));
-  double wz = dfc * sin(_fTheta1 - _fTheta2) / cos(_fTheta2) / _fChassisLength;
+  agribotVelocities agribot_velocities = computeVelocities(distance_front_center, _fThetaWheel, _fTheta1, _fTheta2);
 
-  _fXWheel += dx;
-  _fYWheel += dy;
-  _fThetaWheel += wz;
+  _fXWheel += agribot_velocities.fLinearVelocityX;
+  _fYWheel += agribot_velocities.fLinearVelocityY;
+  _fThetaWheel += agribot_velocities.fAngularVelocityZ;
 
   if (_fThetaWheel < -M_PI)
   {
@@ -215,15 +220,15 @@ double AgribotOdometry::fGetThetaWheel()
 
 float AgribotOdometry::fGetLinearVelocityX()
 {
-  return _fLinearVelocityX;
+  return _agribot_velocities.fLinearVelocityY;
 }
 
 float AgribotOdometry::fGetLinearVelocityY()
 {
-  return _fLinearVelocityY;
+  return _agribot_velocities.fLinearVelocityY;
 }
 
 float AgribotOdometry::fGetAngularVelocityZ()
 {
-  return _fAngularVelocityZ;
+  return _agribot_velocities.fAngularVelocityZ;
 }

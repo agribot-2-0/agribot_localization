@@ -99,8 +99,8 @@ AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
     exit(0);
   }
 
-  _odometryPub = _nh.advertise<nav_msgs::Odometry>("odom/raw", 10);
-  _odometryWheelsPub = _nh.advertise<nav_msgs::Odometry>("odom/raw/wheels", 10);
+  _odometryPub = _nh.advertise<nav_msgs::Odometry>("odom/raw/from_carts_velocities", 10);
+  _odometryWheelsPub = _nh.advertise<nav_msgs::Odometry>("odom/raw/from_wheels_rotations", 10);
   _odometryMsg.header.frame_id = "odom";
   _odometryMsg.child_frame_id = "base_footprint";
 
@@ -116,7 +116,7 @@ AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
   _frontCartSub = _nh.subscribe("encoder/cart/front", 1, &AgribotOdometryNode::frontCartCallback, this);
   _backCartSub = _nh.subscribe("encoder/cart/back", 1, &AgribotOdometryNode::backCartCallback, this);
   _caterpillarWheelsSub =
-      _nh.subscribe("encoder/caterpillar/wheels", 1, &AgribotOdometryNode::caterpillarWheelsCallback, this);
+      _nh.subscribe("encoder/caterpillar/rotations", 1, &AgribotOdometryNode::caterpillarWheelsCallback, this);
 }
 
 void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheelsRotation msg)
@@ -141,8 +141,6 @@ void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotC
   back_right_last = msg.back_right;
   back_left_last = msg.back_left;
   timestamp_last = msg.header.stamp.toSec();
-
-  // ROS_WARN_STREAM("front_right_diff " << front_right_diff << " front_left_diff " << front_left_diff);
 
   _agribotOdom.vUpdatePositionsWheels(front_right_diff, front_left_diff);
 
