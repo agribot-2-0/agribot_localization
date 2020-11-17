@@ -36,12 +36,8 @@ private:
   float _fLinearVelocityYCovariance;
   float _fAngularVelocityZCovariance;
 
-  double front_left_last = 0;
-  double front_right_last = 0;
-  double back_left_last = 0;
-  double back_right_last = 0;
-  double timestamp_last = 0;
-  bool firstMessage = true;
+  agribot_msgs::AgribotCaterpillarWheelsRotation _xWheelsRotationLast;
+  bool _bFirstMessage = true;
 
   void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
   void caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheelsRotation msg);

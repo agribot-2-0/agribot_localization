@@ -42,12 +42,9 @@ private:
   bool _bTheta2Received;
   bool _bDtSet;
 
-  double _fXWheel = 0;
-  double _fYWheel = 0;
-  double _fThetaWheel = 0;
-
-  double _wheelDiameter;  // m
-  double _wheelbase;      // m
+  double _dXWheel = 0;
+  double _dYWheel = 0;
+  double _dThetaWheel = 0;
 
   agribotVelocities computeVelocities(float eta1, float theta0, float theta1, float theta2);
 
@@ -82,9 +79,9 @@ public:
   float fGetX();
   float fGetY();
 
-  double fGetXWheel();
-  double fGetYWheel();
-  double fGetThetaWheel();
+  double dGetXWheel();
+  double dGetYWheel();
+  double dGetThetaWheel();
 
   float fGetLinearVelocityX();
   float fGetLinearVelocityY();

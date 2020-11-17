@@ -6,7 +6,7 @@
 
 AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
 {
-  float wheelRadius, chassisLength, wheelbase;
+  float wheelRadius, chassisLength;
 
   if (_nh.hasParam("wheel_radius"))
   {
@@ -16,18 +16,6 @@ AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
   else
   {
     ROS_FATAL_STREAM("[Agribot Odometry Node] Missing wheel_radius parameter. Exiting...");
-    _nh.shutdown();
-    exit(0);
-  }
-
-  if (_nh.hasParam("wheelbase"))
-  {
-    _nh.getParam("wheelbase", wheelbase);
-    _agribotOdom.vSetWheelbase(wheelbase);
-  }
-  else
-  {
-    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing wheelbase parameter. Exiting...");
     _nh.shutdown();
     exit(0);
   }
@@ -121,37 +109,27 @@ AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
 
 void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheelsRotation msg)
 {
-  if (firstMessage)
+  if (_bFirstMessage)
   {
-    front_right_last = msg.front_right;
-    front_left_last = msg.front_left;
-    back_right_last = msg.back_right;
-    back_left_last = msg.back_left;
-    timestamp_last = msg.header.stamp.toSec();
-    firstMessage = false;
+    _xWheelsRotationLast = msg;
+    _bFirstMessage = false;
   }
-  double front_right_diff = msg.front_right - front_right_last;
-  double front_left_diff = msg.front_left - front_left_last;
-  double back_right_diff = msg.back_right - back_right_last;
-  double back_left_diff = msg.back_left - back_left_last;
-  double timestamp_diff = msg.header.stamp.toSec() - timestamp_last;
 
-  front_right_last = msg.front_right;
-  front_left_last = msg.front_left;
-  back_right_last = msg.back_right;
-  back_left_last = msg.back_left;
-  timestamp_last = msg.header.stamp.toSec();
+  double front_right_diff = msg.front_right - _xWheelsRotationLast.front_right;
+  double front_left_diff = msg.front_left - _xWheelsRotationLast.front_left;
+
+  _xWheelsRotationLast = msg;
 
   _agribotOdom.vUpdatePositionsWheels(front_right_diff, front_left_diff);
 
   _odometryWheelMsg.header.stamp = ros::Time::now();
 
   // X,Y
-  _odometryWheelMsg.pose.pose.position.x = _agribotOdom.fGetXWheel();
-  _odometryWheelMsg.pose.pose.position.y = _agribotOdom.fGetYWheel();
+  _odometryWheelMsg.pose.pose.position.x = _agribotOdom.dGetXWheel();
+  _odometryWheelMsg.pose.pose.position.y = _agribotOdom.dGetYWheel();
   // Yaw
   tf2::Quaternion quat;
-  quat.setRPY(0, 0, _agribotOdom.fGetThetaWheel());
+  quat.setRPY(0, 0, _agribotOdom.dGetThetaWheel());
   _odometryWheelMsg.pose.pose.orientation = tf2::toMsg(quat);
 
   _odometryWheelsPub.publish(_odometryWheelMsg);
