@@ -87,13 +87,52 @@ AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
     exit(0);
   }
 
-  _odometryPub = _nh.advertise<nav_msgs::Odometry>("odom/raw", 10);
+  _odometryPub = _nh.advertise<nav_msgs::Odometry>("odom/raw/from_carts_velocities", 10);
+  _odometryWheelsPub = _nh.advertise<nav_msgs::Odometry>("odom/raw/from_wheels_rotations", 10);
   _odometryMsg.header.frame_id = "odom";
   _odometryMsg.child_frame_id = "base_footprint";
+
+  _odometryWheelMsg.header.frame_id = "odom";
+  _odometryWheelMsg.child_frame_id = "base_footprint";
+
+  // Pose covariance
+  _odometryWheelMsg.pose.covariance[0] = _fPositionCovariance;
+  _odometryWheelMsg.pose.covariance[7] = _fPositionCovariance;
+  _odometryWheelMsg.pose.covariance[35] = _fOrientationCovariance;
 
   _caterpillarSub = _nh.subscribe("encoder/caterpillar", 1, &AgribotOdometryNode::caterpillarCallback, this);
   _frontCartSub = _nh.subscribe("encoder/cart/front", 1, &AgribotOdometryNode::frontCartCallback, this);
   _backCartSub = _nh.subscribe("encoder/cart/back", 1, &AgribotOdometryNode::backCartCallback, this);
+  _caterpillarWheelsSub =
+      _nh.subscribe("encoder/caterpillar/rotations", 1, &AgribotOdometryNode::caterpillarWheelsCallback, this);
+}
+
+void AgribotOdometryNode::caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheelsRotation msg)
+{
+  if (_bFirstMessage)
+  {
+    _xWheelsRotationLast = msg;
+    _bFirstMessage = false;
+  }
+
+  double front_right_diff = msg.front_right - _xWheelsRotationLast.front_right;
+  double front_left_diff = msg.front_left - _xWheelsRotationLast.front_left;
+
+  _xWheelsRotationLast = msg;
+
+  _agribotOdom.vUpdatePositionsWheels(front_right_diff, front_left_diff);
+
+  _odometryWheelMsg.header.stamp = ros::Time::now();
+
+  // X,Y
+  _odometryWheelMsg.pose.pose.position.x = _agribotOdom.dGetXWheel();
+  _odometryWheelMsg.pose.pose.position.y = _agribotOdom.dGetYWheel();
+  // Yaw
+  tf2::Quaternion quat;
+  quat.setRPY(0, 0, _agribotOdom.dGetThetaWheel());
+  _odometryWheelMsg.pose.pose.orientation = tf2::toMsg(quat);
+
+  _odometryWheelsPub.publish(_odometryWheelMsg);
 }
 
 void AgribotOdometryNode::caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg)

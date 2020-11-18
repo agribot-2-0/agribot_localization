@@ -14,9 +14,11 @@
   <arg name="angular_velocity_z_covariance" default="0.0001" />
 
   <!-- Forward kinematics -->
-  <node name="odometry_node" pkg="agribot_localization" type="odometry_node">
-    <remap from="~odom/raw" to="$(arg odometry_topic)"/>
+  <node name="odometry_node" pkg="agribot_localization" type="odometry_node" output="screen">
+    <remap from="~odom/raw/from_carts_velocities" to="$(arg odometry_topic)/from_carts_velocities"/>
+    <remap from="~odom/raw/from_wheels_rotations" to="$(arg odometry_topic)/from_wheels_rotations"/>
     <remap from="~encoder/caterpillar" to="$(arg encoder_caterpillar_topic)"/>
+    <remap from="~encoder/caterpillar/rotations" to="$(arg encoder_caterpillar_topic)/rotations"/>
     <remap from="~encoder/cart/front" to="$(arg encoder_cart_front_topic)"/>
     <remap from="~encoder/cart/back" to="$(arg encoder_cart_back_topic)"/>
   

@@ -5,12 +5,13 @@
 #pragma once
 
 #include <agribot_localization/AgribotOdometry.h>
-#include <ros/ros.h>
-#include <tf2_ros/transform_listener.h>
-#include <tf2/utils.h>
-#include <std_msgs/Float32.h>
-#include <nav_msgs/Odometry.h>
 #include <agribot_msgs/AgribotCaterpillar.h>
+#include <agribot_msgs/AgribotCaterpillarWheelsRotation.h>
+#include <nav_msgs/Odometry.h>
+#include <ros/ros.h>
+#include <std_msgs/Float32.h>
+#include <tf2/utils.h>
+#include <tf2_ros/transform_listener.h>
 
 class AgribotOdometryNode
 {
@@ -19,8 +20,11 @@ private:
   ros::Subscriber _caterpillarSub;
   ros::Subscriber _frontCartSub;
   ros::Subscriber _backCartSub;
+  ros::Subscriber _caterpillarWheelsSub;
   ros::Publisher _odometryPub;
+  ros::Publisher _odometryWheelsPub;
   nav_msgs::Odometry _odometryMsg;
+  nav_msgs::Odometry _odometryWheelMsg;
 
   AgribotOdometry _agribotOdom;
   double _dPreviousTimestamp;
@@ -32,7 +36,11 @@ private:
   float _fLinearVelocityYCovariance;
   float _fAngularVelocityZCovariance;
 
+  agribot_msgs::AgribotCaterpillarWheelsRotation _xWheelsRotationLast;
+  bool _bFirstMessage = true;
+
   void caterpillarCallback(const agribot_msgs::AgribotCaterpillar msg);
+  void caterpillarWheelsCallback(const agribot_msgs::AgribotCaterpillarWheelsRotation msg);
   void frontCartCallback(const std_msgs::Float32 msg);
   void backCartCallback(const std_msgs::Float32 msg);
 
