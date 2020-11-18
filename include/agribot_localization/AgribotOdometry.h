@@ -65,7 +65,6 @@ public:
   void vSetTheta2(float value);
   void vSetEta1(float value);
   void vSetWheelRadius(float value);
-  void vSetWheelbase(double value);
   void vSetChassisLength(float value);
   void vSetDt(float value);
 
