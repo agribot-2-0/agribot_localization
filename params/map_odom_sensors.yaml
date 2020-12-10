@@ -1,6 +1,6 @@
 
 # Wheel odometry
-odom0: agribot/odom/raw
+odom0: agribot/odom/raw/from_carts_velocities
 odom0_config: [false,  false, false,
                false, false, false,
                true,  true,  false,
