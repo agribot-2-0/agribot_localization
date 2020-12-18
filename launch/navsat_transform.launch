@@ -1,10 +1,8 @@
 <launch>
 
-  <arg name="navsat_transform_magnetic_declination_radians" default="0.0" />
-
   <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true">
 
-    <param name="magnetic_declination_radians" value="$(arg navsat_transform_magnetic_declination_radians)" />
+    <param name="magnetic_declination_radians" value="0.0" />
     <param name="yaw_offset" value="0" />
     <param name="broadcast_utm_transform" value="true" />
     <param name="use_odometry_yaw" value="false" />

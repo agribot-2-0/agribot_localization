@@ -2,7 +2,6 @@
   <!-- EKF/UKF selection -->
   <arg name="use_ukf" default="false" />
   <arg name="sim" default="false" />
-  <arg name="navsat_transform_magnetic_declination_radians" default="0.0" />
 
   <!-- Wheel odometry parameters -->
   <arg name="wheel_radius" default="0.16" />
@@ -17,6 +16,9 @@
   <!-- <include file="$(find agribot_localization)/launch/imu_complementary_filter.launch" /> -->
   <include file="$(find agribot_localization)/launch/imu_madgwick_filter.launch" />
 
+  <!-- Declination correction -->
+  <node pkg="agribot_localization" type="imu_declination_correction_node.py" name="imu_declination_correction_node"/>
+
   <!-- Odometry -->
   <include file="$(find agribot_localization)/launch/odometry.launch">
     <arg name="wheel_radius" value="$(arg wheel_radius)" />
@@ -29,9 +31,7 @@
   </include>
 
   <!-- Navsat transform -->
-  <include file="$(find agribot_localization)/launch/navsat_transform.launch">
-    <arg name="navsat_transform_magnetic_declination_radians" value="$(arg navsat_transform_magnetic_declination_radians)" />
-  </include>
+  <include file="$(find agribot_localization)/launch/navsat_transform.launch"/>
 
   <!-- Robot localization -->
   <include file="$(find agribot_localization)/launch/robot_localization.launch">

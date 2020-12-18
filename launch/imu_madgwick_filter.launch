@@ -22,7 +22,7 @@
 
     <remap from="imu/data_raw"  to="agribot/imu/raw" />
     <remap from="imu/mag"       to="agribot/magnetic_field" />
-    <remap from="imu/data"      to="agribot/imu/filtered" />
+    <remap from="imu/data"      to="agribot/imu/prefiltered" />
 
   </node>
 
