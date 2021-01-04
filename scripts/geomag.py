@@ -21,13 +21,13 @@ import math, os, unittest
 from datetime import date
 
 class GeoMag:
-    def GeoMag(self, dlat, dlon, h=0, _date=date.today()): # latitude (decimal degrees), longitude (decimal degrees), altitude (feet), date
+    def GeoMag(self, dlat, dlon, h=0, _date=date.today()): # latitude (decimal degrees), longitude (decimal degrees), altitude (meters), date
         #time = date('Y') + date('z')/'days in year'
         y = _date.year
         dInYear = (date(y+1,1,1)-date(y,1,1)).days
         time = y + float((_date - date(y,1,1)).days)/dInYear
 
-        alt = h/3280.8399
+        alt = h/1000.0  # To kilometers
         r = self.GeoMagSI(dlat,dlon,alt,time)
         r.alt = h
         return r
