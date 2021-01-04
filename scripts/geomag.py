@@ -1,3 +1,5 @@
+# pylint: skip-file
+
 # geomag.py
 # by Christopher Weiss cmweiss@gmail.com
 
