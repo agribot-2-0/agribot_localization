@@ -292,6 +292,8 @@ class GeoMag:
                 D2=D2-1
                 m=m+D1
 
+
+# TODO - uncomment when tests are added
 # class GeoMagTest(unittest.TestCase):
 #     gm = GeoMag()
 
