@@ -10,6 +10,7 @@ add_compile_options(-std=c++14)
 #############################################################################
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  rospy
   tf2
   tf2_ros
   message_filters
@@ -74,6 +75,12 @@ install(TARGETS
   odom_to_navsatfix_node
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+catkin_install_python(PROGRAMS
+   scripts/geomag.py
+   scripts/imu_declination_correction_node.py
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(DIRECTORY launch params
