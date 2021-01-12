@@ -8,81 +8,84 @@ AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
 {
   float wheelRadius, chassisLength;
 
-  if (_nh.hasParam("wheel_radius"))
+  if (_nh.hasParam("/dimensions/wheel_radius"))
   {
-    _nh.getParam("wheel_radius", wheelRadius);
+    _nh.getParam("/dimensions/wheel_radius", wheelRadius);
     _agribotOdom.vSetWheelRadius(wheelRadius);
   }
   else
   {
-    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing wheel_radius parameter. Exiting...");
+    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing /dimensions/wheel_radius parameter. Exiting...");
     _nh.shutdown();
     exit(0);
   }
 
-  if (_nh.hasParam("chassis_length"))
+  if (_nh.hasParam("/dimensions/robot_axis_to_axis_length"))
   {
-    _nh.getParam("chassis_length", chassisLength);
+    _nh.getParam("/dimensions/robot_axis_to_axis_length", chassisLength);
     _agribotOdom.vSetChassisLength(chassisLength);
   }
   else
   {
-    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing chassis_length parameter. Exiting...");
+    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing /dimensions/robot_axis_to_axis_length parameter. Exiting...");
     _nh.shutdown();
     exit(0);
   }
 
-  if (_nh.hasParam("orientation_covariance"))
+  if (_nh.hasParam("/wheel_odometry/orientation_covariance"))
   {
-    _nh.getParam("orientation_covariance", _fOrientationCovariance);
+    _nh.getParam("/wheel_odometry/orientation_covariance", _fOrientationCovariance);
   }
   else
   {
-    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing orientation_covariance parameter. Exiting...");
+    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing /wheel_odometry/orientation_covariance parameter. Exiting...");
     _nh.shutdown();
     exit(0);
   }
 
-  if (_nh.hasParam("position_covariance"))
+  if (_nh.hasParam("/wheel_odometry/position_covariance"))
   {
-    _nh.getParam("position_covariance", _fPositionCovariance);
+    _nh.getParam("/wheel_odometry/position_covariance", _fPositionCovariance);
   }
   else
   {
-    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing position_covariance parameter. Exiting...");
+    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing /wheel_odometry/position_covariance parameter. Exiting...");
     _nh.shutdown();
     exit(0);
   }
 
-  if (_nh.hasParam("linear_velocity_x_covariance"))
+  if (_nh.hasParam("/wheel_odometry/linear_velocity_x_covariance"))
   {
-    _nh.getParam("linear_velocity_x_covariance", _fLinearVelocityXCovariance);
+    _nh.getParam("/wheel_odometry/linear_velocity_x_covariance", _fLinearVelocityXCovariance);
   }
   else
   {
-    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing linear_velocity_x_covariance parameter. Exiting...");
+    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing /wheel_odometry/linear_velocity_x_covariance parameter. "
+                     "Exiting...");
     _nh.shutdown();
     exit(0);
   }
 
-  if (_nh.hasParam("linear_velocity_y_covariance"))
+  if (_nh.hasParam("/wheel_odometry/linear_velocity_y_covariance"))
   {
-    _nh.getParam("linear_velocity_y_covariance", _fLinearVelocityYCovariance);
+    _nh.getParam("/wheel_odometry/linear_velocity_y_covariance", _fLinearVelocityYCovariance);
   }
   else
   {
-    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing linear_velocity_y_covariance parameter. Exiting...");
+    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing /wheel_odometry/linear_velocity_y_covariance parameter. "
+                     "Exiting...");
     _nh.shutdown();
     exit(0);
   }
 
-  if (_nh.hasParam("angular_velocity_z_covariance"))
+  if (_nh.hasParam("/wheel_odometry/angular_velocity_z_covariance"))
   {
-    _nh.getParam("angular_velocity_z_covariance", _fAngularVelocityZCovariance);
+    _nh.getParam("/wheel_odometry/angular_velocity_z_covariance", _fAngularVelocityZCovariance);
   }
   else
   {
-    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing angular_velocity_z_covariance parameter. Exiting...");
+    ROS_FATAL_STREAM("[Agribot Odometry Node] Missing /wheel_odometry/angular_velocity_z_covariance parameter. "
+                     "Exiting...");
     _nh.shutdown();
     exit(0);
   }

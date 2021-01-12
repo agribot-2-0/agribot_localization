@@ -3,15 +3,6 @@
   <arg name="use_ukf" default="false" />
   <arg name="sim" default="false" />
 
-  <!-- Wheel odometry parameters -->
-  <arg name="wheel_radius" default="0.16" />
-  <arg name="chassis_length" default="2.1" />
-  <arg name="orientation_covariance" default="0.01" />
-  <arg name="position_covariance" default="0.01" />
-  <arg name="linear_velocity_x_covariance" default="0.0001" />
-  <arg name="linear_velocity_y_covariance" default="0.0001" />
-  <arg name="angular_velocity_z_covariance" default="0.0001" />
-
   <!-- IMU filter -->
   <!-- <include file="$(find agribot_localization)/launch/imu_complementary_filter.launch" /> -->
   <include file="$(find agribot_localization)/launch/imu_madgwick_filter.launch" />
@@ -20,15 +11,7 @@
   <node pkg="agribot_localization" type="imu_declination_correction_node.py" name="imu_declination_correction_node"/>
 
   <!-- Odometry -->
-  <include file="$(find agribot_localization)/launch/odometry.launch">
-    <arg name="wheel_radius" value="$(arg wheel_radius)" />
-    <arg name="chassis_length" value="$(arg chassis_length)" />
-    <arg name="orientation_covariance" value="$(arg orientation_covariance)" />
-    <arg name="position_covariance" value="$(arg position_covariance)" />
-    <arg name="linear_velocity_x_covariance" value="$(arg linear_velocity_x_covariance)" />
-    <arg name="linear_velocity_y_covariance" value="$(arg linear_velocity_y_covariance)" />
-    <arg name="angular_velocity_z_covariance" value="$(arg angular_velocity_z_covariance)" />
-  </include>
+  <include file="$(find agribot_localization)/launch/odometry.launch"/>
 
   <!-- Navsat transform -->
   <include file="$(find agribot_localization)/launch/navsat_transform.launch"/>

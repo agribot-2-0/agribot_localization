@@ -1,17 +1,11 @@
 <launch>
+  <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/description/dimensions.yaml" />
+  <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/localization/wheel_odometry.yaml" />
 
   <arg name="odometry_topic" default="/agribot/odom/raw" />
   <arg name="encoder_caterpillar_topic" default="/agribot/encoder/caterpillar" />
   <arg name="encoder_cart_front_topic" default="/agribot/encoder/cart/front" />
   <arg name="encoder_cart_back_topic" default="/agribot/encoder/cart/back" />
-
-  <arg name="wheel_radius" default="0.16" />
-  <arg name="chassis_length" default="2.1" />
-  <arg name="orientation_covariance" default="0.01" />
-  <arg name="position_covariance" default="0.01" />
-  <arg name="linear_velocity_x_covariance" default="0.0001" />
-  <arg name="linear_velocity_y_covariance" default="0.0001" />
-  <arg name="angular_velocity_z_covariance" default="0.0001" />
 
   <!-- Forward kinematics -->
   <node name="odometry_node" pkg="agribot_localization" type="odometry_node" output="screen">
@@ -21,14 +15,6 @@
     <remap from="~encoder/caterpillar/rotations" to="$(arg encoder_caterpillar_topic)/rotations"/>
     <remap from="~encoder/cart/front" to="$(arg encoder_cart_front_topic)"/>
     <remap from="~encoder/cart/back" to="$(arg encoder_cart_back_topic)"/>
-  
-    <param name="~wheel_radius" value="$(arg wheel_radius)" />
-    <param name="~chassis_length" value="$(arg chassis_length)" />
-    <param name="~orientation_covariance" value="$(arg orientation_covariance)" />
-    <param name="~position_covariance" value="$(arg position_covariance)" />
-    <param name="~linear_velocity_x_covariance" value="$(arg linear_velocity_x_covariance)" />
-    <param name="~linear_velocity_y_covariance" value="$(arg linear_velocity_y_covariance)" />
-    <param name="~angular_velocity_z_covariance" value="$(arg angular_velocity_z_covariance)" />
   </node>
 
 </launch>
