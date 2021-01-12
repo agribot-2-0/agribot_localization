@@ -21,28 +21,4 @@
     <arg name="use_ukf" value="$(arg use_ukf)" />
   </include>
 
-  <!-- Translation of estimated odometry for map->odom EKF -->
-  <node pkg="agribot_localization" type="odom_to_navsatfix_node" name="odom_to_navsatfix_node_1">
-    <remap from="~input_odometry" to="/agribot/odom/prefiltered" />
-    <remap from="~translated_navsatfix" to="/agribot/map_odom_navsatfix" />
-    <remap from="~input_navsatfix" to="/agribot/gnss" />
-  </node>
-
-  <!-- Translation of estimated odometry for odom->base_footprint EKF -->
-  <node pkg="agribot_localization" type="odom_to_navsatfix_node" name="odom_to_navsatfix_node_2">
-    <remap from="~input_odometry" to="/agribot/odom/estimated" />
-    <remap from="~translated_navsatfix" to="/agribot/odom_base_navsatfix" />
-    <remap from="~input_navsatfix" to="/agribot/gnss" />
-  </node>
-
-  <group if="$(arg sim)">
-    <!-- Translation of gazebo ground truth odometry -->
-    <node pkg="agribot_localization" type="odom_to_navsatfix_node" name="odom_to_navsatfix_node_3">
-      <remap from="~input_odometry" to="/agribot/odometry" />
-      <remap from="~translated_navsatfix" to="/agribot/odom_ground_truth_navsatfix" />
-      <remap from="~input_navsatfix" to="/agribot/gnss" />
-    </node>
-
-  </group>
-
 </launch>
