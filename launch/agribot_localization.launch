@@ -1,7 +1,6 @@
 <launch>
   <!-- EKF/UKF selection -->
   <arg name="use_ukf" default="false" />
-  <arg name="sim" default="false" />
 
   <!-- IMU filter -->
   <!-- <include file="$(find agribot_localization)/launch/imu_complementary_filter.launch" /> -->
