@@ -1,22 +1,13 @@
 <launch>
-  
+
+  <!-- Madgwick parameters -->
+  <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/localization/madgwick.yaml" />
+
   <!-- Madgwick filter -->
-  <node name="agribot_imu_madgwick_filter" pkg="imu_filter_madgwick" type="imu_filter_node" respawn="true" >
-
-    <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/localization/madgwick.yaml" />
-    
-    <param name="world_frame"             value="enu" type="string"/>
-    
-    <param name="use_mag"                 value="true" type="bool"/>
-    <param name="use_magnetic_field_msg"  value="true" type="bool"/>
-    
-    <param name="publish_debug_topics"    value="false" type="bool"/>
-    <param name="publish_tf"              value="false" type="bool"/>
-
+  <node name="imu_filter_madgwick" pkg="imu_filter_madgwick" type="imu_filter_node" respawn="true" >
     <remap from="imu/data_raw"  to="agribot/imu/raw" />
     <remap from="imu/mag"       to="agribot/magnetic_field" />
     <remap from="imu/data"      to="agribot/imu/prefiltered" />
-
   </node>
 
 </launch>
