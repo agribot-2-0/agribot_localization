@@ -2,10 +2,10 @@
   <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/description/dimensions.yaml" />
   <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/localization/wheel_odometry.yaml" />
 
-  <arg name="odometry_topic" default="/agribot/odom/raw" />
-  <arg name="encoder_caterpillar_topic" default="/agribot/encoder/caterpillar" />
-  <arg name="encoder_cart_front_topic" default="/agribot/encoder/cart/front" />
-  <arg name="encoder_cart_back_topic" default="/agribot/encoder/cart/back" />
+  <arg name="odometry_topic" value="/agribot/odom/raw" />
+  <arg name="encoder_caterpillar_topic" value="/agribot/encoder/caterpillar" />
+  <arg name="encoder_cart_front_topic" value="/agribot/encoder/cart/front" />
+  <arg name="encoder_cart_back_topic" value="/agribot/encoder/cart/back" />
 
   <!-- Forward kinematics -->
   <node name="odometry_node" pkg="agribot_localization" type="odometry_node" output="screen">
