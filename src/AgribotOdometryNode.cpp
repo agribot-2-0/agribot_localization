@@ -6,10 +6,9 @@
 
 AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
 {
-  float wheelRadius, chassisLength;
-
   if (_nh.hasParam("/dimensions/wheel_radius"))
   {
+    float wheelRadius;
     _nh.getParam("/dimensions/wheel_radius", wheelRadius);
     _agribotOdom.vSetWheelRadius(wheelRadius);
   }
@@ -22,6 +21,7 @@ AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
 
   if (_nh.hasParam("/dimensions/robot_axis_to_axis_length"))
   {
+    float chassisLength;
     _nh.getParam("/dimensions/robot_axis_to_axis_length", chassisLength);
     _agribotOdom.vSetChassisLength(chassisLength);
   }

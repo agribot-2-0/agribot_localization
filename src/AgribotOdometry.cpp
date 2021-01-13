@@ -6,9 +6,7 @@
 #include <ros/ros.h>
 
 AgribotOdometry::AgribotOdometry()
-  : _fWheelRadius(DEFAULT_WHEEL_RADIUS)
-  , _fChassisLength(DEFAULT_CHASSIS_LENGTH)
-  , _bTheta0Received(true)  // On default theta0 is internal state
+  : _bTheta0Received(true)  // On default theta0 is internal state
   , _bTheta1Received(false)
   , _bTheta2Received(false)
   , _bDtSet(false)
