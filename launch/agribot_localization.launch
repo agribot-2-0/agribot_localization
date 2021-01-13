@@ -1,23 +1,17 @@
 <launch>
-  <!-- EKF/UKF selection -->
-  <arg name="use_ukf" default="false" />
-
   <!-- IMU filter -->
-  <!-- <include file="$(find agribot_localization)/launch/imu_complementary_filter.launch" /> -->
   <include file="$(find agribot_localization)/launch/imu_madgwick_filter.launch" />
 
   <!-- Declination correction -->
-  <node pkg="agribot_localization" type="imu_declination_correction_node.py" name="imu_declination_correction_node"/>
+  <node pkg="agribot_localization" type="imu_declination_correction_node.py" name="imu_declination_correction_node" />
 
   <!-- Odometry -->
-  <include file="$(find agribot_localization)/launch/odometry.launch"/>
+  <include file="$(find agribot_localization)/launch/odometry.launch" />
 
   <!-- Navsat transform -->
-  <include file="$(find agribot_localization)/launch/navsat_transform.launch"/>
+  <include file="$(find agribot_localization)/launch/navsat_transform.launch" />
 
   <!-- Robot localization -->
-  <include file="$(find agribot_localization)/launch/robot_localization.launch">
-    <arg name="use_ukf" value="$(arg use_ukf)" />
-  </include>
+  <include file="$(find agribot_localization)/launch/robot_localization.launch" />
 
 </launch>
