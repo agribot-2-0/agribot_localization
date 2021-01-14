@@ -5,21 +5,21 @@
   <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/localization/robot_localization_local_kf.yaml" />
   <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/localization/robot_localization_global_kf.yaml" />
 
-  <arg name="global_ekf_odom_topic" value="agribot/odom/prefiltered"/>
-  <arg name="local_ekf_odom_topic" value="agribot/odom/estimated"/>
+  <arg name="global_ekf_odom_topic" value="agribot/odom/global"/>
+  <arg name="local_ekf_odom_topic" value="agribot/odom/local"/>
 
   <!-- Extended Kalman Filter -->
   <group unless="$(arg use_ukf)">
     <!-- Local KF -->
     <node pkg="robot_localization" type="ekf_localization_node" name="agribot_localization_local" clear_params="true" respawn="true">
       <remap from="odometry/filtered" to="$(arg local_ekf_odom_topic)" />
-      <remap from="set_pose" to="set_pose_odom_baselink" />
+      <remap from="set_pose" to="set_local_pose" />
     </node>
 
     <!-- Global KF -->
     <node pkg="robot_localization" type="ekf_localization_node" name="agribot_localization_global" clear_params="true" respawn="true">
       <remap from="odometry/filtered" to="$(arg global_ekf_odom_topic)" />
-      <remap from="set_pose" to="set_pose_map_odom" />
+      <remap from="set_pose" to="set_global_pose" />
     </node>
   </group>
 
@@ -28,13 +28,13 @@
     <!-- Local KF -->
     <node pkg="robot_localization" type="ukf_localization_node" name="agribot_localization_local" clear_params="true" respawn="true">
       <remap from="odometry/filtered" to="$(arg local_ekf_odom_topic)" />
-      <remap from="set_pose" to="set_pose_odom_baselink" />
+      <remap from="set_pose" to="set_local_pose" />
     </node>
 
     <!-- Global KF -->
     <node pkg="robot_localization" type="ukf_localization_node" name="agribot_localization_global" clear_params="true" respawn="true">
       <remap from="odometry/filtered" to="$(arg global_ekf_odom_topic)" />
-      <remap from="set_pose" to="set_pose_map_odom" />
+      <remap from="set_pose" to="set_global_pose" />
     </node>
   </group>
 
