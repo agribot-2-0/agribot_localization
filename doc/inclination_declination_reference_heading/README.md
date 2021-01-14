@@ -30,7 +30,7 @@
 
 ## Implementation in the localization system
 ### Correcting declination errors
-* Setting `magnetic_declination_radians` in navsat_transform_node from robot_localization([navsat_transform.launch file](../../launch/navsat_transform.launch))) should correct declination errors, however from my observation it only influences `utm => map` transform and is not properly propagated to the local coordinates (in mapviz robot is pointing towards magnetic north instead of geographical north when `reference_heading`=0). 
+* Setting `magnetic_declination_radians` in navsat_transform_node from robot_localization([navsat_transform.launch file](../../launch/navsat_transform.launch))) should correct declination errors, however from my observation it only influences `map => utm` transform and is not properly propagated to the local coordinates (in mapviz robot is pointing towards magnetic north instead of geographical north when `reference_heading`=0).
 
 * Correction is instead applied using ([imu_declination_correction_node](../../scripts/imu_declination_correction_node.py)), which is based on fork of [geomag](https://github.com/cmweiss/geomag) library. The correction is determined for current GPS coordinates obtained from `/agribot/gnss` topic. Correction is then applied according to the diagram presented below - declination angle is added to the yaw angle of `sensor_msgs/Imu` message from the `/agribot/imu/prefiltered` topic. The corrected message is then rewritten to the `/agribot/imu/filtered` topic. Thanks to this, robot_localization nodes receive messages with the already corrected declination error.
 >> ![imu_declination_correction_node_diagram](diagrams/imu_declination_correction_node_diagram.png)
