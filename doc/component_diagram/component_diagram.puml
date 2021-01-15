@@ -9,6 +9,7 @@ interface "/agribot/encoder/cart/back\nstd_msgs/Float32.msg" as encoder_cart_bac
 interface "/agribot/gnss\nsensor_msgs/NavSatFix.msg" as gnss
 
 ' External output interfaces
+interface "/agribot/gnss/filtered\nsensor_msgs/NavSatFix.msg" as gnss_global
 interface "/agribot/odom/global\nav_msgs/Odometry.msg" as odom_global
 interface "/tf (odom -> base_footprint)\ntf2_msgs/TFMessage.msg" as odom_base_tf
 interface "/agribot/odom/local\nav_msgs/Odometry.msg" as odom_local
@@ -73,6 +74,7 @@ WheelOdometry -up-( encoder_cart_back
 
 ' Navsat transform
 NavsatTransform --down-- map_utm_tf
+NavsatTransform --down-- gnss_global
 
 ' Local KF
 LocalKf -down- odom_base_tf
