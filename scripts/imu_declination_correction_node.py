@@ -1,6 +1,5 @@
 #!/usr/bin/env python2
 
-import os
 from math import radians
 
 import rospy
@@ -19,11 +18,12 @@ class ImuDeclinationCorrectionNode(object):
 
         if rospy.has_param(
                 '/imu_declination_correction_node/wmm_config_filepath'):
-            wmm_filename = rospy.get_param("/imu_declination_correction_node/wmm_config_filepath")
+            wmm_filename = rospy.get_param(
+                "/imu_declination_correction_node/wmm_config_filepath")
             self.geomag = GeoMag(wmm_filename)
         else:
             rospy.logerr(
-                '[IMU Declination Correction Node] Missing wmm_config_filepath parameter. Exiting...'
+                '[Declination Correction Node] Missing wmm_config_filepath parameter. Exiting...'
             )
             rospy.signal_shutdown('wmm_config_filepath missing...')
 
