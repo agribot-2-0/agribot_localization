@@ -1,41 +1,41 @@
 <launch>
-  <!-- ########### EKF/UKF selection ########### -->
-  <arg name="use_ukf" default="false" />
+  <!-- EKF/UKF selection -->
+  <arg name="use_ukf" default="$(env AGRIBOT_LOCALIZATION_USE_UKF)" />
 
+  <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/localization/robot_localization_local_kf.yaml" />
+  <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/localization/robot_localization_global_kf.yaml" />
 
-  <!-- ########### Node type declaration ########### -->
-  <arg name="node_type" value="$(eval 'ukf' if arg('use_ukf') else 'ekf')" />
+  <arg name="global_ekf_odom_topic" value="agribot/odom/global"/>
+  <arg name="local_ekf_odom_topic" value="agribot/odom/local"/>
 
+  <!-- Extended Kalman Filter -->
+  <group unless="$(arg use_ukf)">
+    <!-- Local KF -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="agribot_localization_local" clear_params="true" respawn="true">
+      <remap from="odometry/filtered" to="$(arg local_ekf_odom_topic)" />
+      <remap from="set_pose" to="set_local_pose" />
+    </node>
 
-  <!-- ########### Launch nodes with propers settings ########### -->
-  <node pkg="robot_localization" type="$(arg node_type)_localization_node" name="agribot_localization_map_odom_$(arg node_type)" clear_params="true" respawn="true">
+    <!-- Global KF -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="agribot_localization_global" clear_params="true" respawn="true">
+      <remap from="odometry/filtered" to="$(arg global_ekf_odom_topic)" />
+      <remap from="set_pose" to="set_global_pose" />
+    </node>
+  </group>
 
-    <param name="world_frame" value="map" type="str" />
-    <param name="transform_time_offset" value="0.05" type="double" />
-    <param name="predict_to_current_time" value="true" type="bool" />
-    <param name="frequency" value="30" type="double" />
-    <param name="publish_tf" value="true" type="bool" />
-    <rosparam command="load" file="$(find agribot_localization)/params/common.yaml" />
-    <rosparam command="load" file="$(find agribot_localization)/params/map_odom_sensors.yaml" />
-    <rosparam command="load" file="$(find agribot_localization)/params/ukf.yaml" if="$(arg use_ukf)"/>
-    <remap from="odometry/filtered" to="agribot/odom/prefiltered" />
-    <remap from="set_pose" to="set_pose_map_odom" />
-  </node>
+  <!-- Unscented Kalman Filter -->
+  <group if="$(arg use_ukf)">
+    <!-- Local KF -->
+    <node pkg="robot_localization" type="ukf_localization_node" name="agribot_localization_local" clear_params="true" respawn="true">
+      <remap from="odometry/filtered" to="$(arg local_ekf_odom_topic)" />
+      <remap from="set_pose" to="set_local_pose" />
+    </node>
 
-  <!-- Second (odom->base_link) EKF -->
-  <node pkg="robot_localization" type="$(arg node_type)_localization_node" name="agribot_localization_odom_baselink_$(arg node_type)" clear_params="true" respawn="true">
-
-    <param name="world_frame" value="odom" type="str" />
-    <param name="transform_time_offset" value="0.05" type="double" />
-    <param name="predict_to_current_time" value="true" type="bool" />
-    <param name="frequency" value="30" type="double" />
-    <param name="publish_tf" value="true" type="bool" />
-    <rosparam command="load" file="$(find agribot_localization)/params/common.yaml" />
-    <rosparam command="load" file="$(find agribot_localization)/params/odom_base_sensors.yaml" />
-    <rosparam command="load" file="$(find agribot_localization)/params/ukf.yaml" if="$(arg use_ukf)"/>
-    <remap from="odometry/filtered" to="agribot/odom/estimated" />
-    <remap from="set_pose" to="set_pose_odom_baselink" />
-  </node>
-
+    <!-- Global KF -->
+    <node pkg="robot_localization" type="ukf_localization_node" name="agribot_localization_global" clear_params="true" respawn="true">
+      <remap from="odometry/filtered" to="$(arg global_ekf_odom_topic)" />
+      <remap from="set_pose" to="set_global_pose" />
+    </node>
+  </group>
 
 </launch>

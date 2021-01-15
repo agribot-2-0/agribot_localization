@@ -1,65 +1,18 @@
 <launch>
-  <!-- EKF/UKF selection -->
-  <arg name="use_ukf" default="false" />
-  <arg name="sim" default="false" />
-
-  <!-- Wheel odometry parameters -->
-  <arg name="wheel_radius" default="0.16" />
-  <arg name="chassis_length" default="2.1" />
-  <arg name="orientation_covariance" default="0.01" />
-  <arg name="position_covariance" default="0.01" />
-  <arg name="linear_velocity_x_covariance" default="0.0001" />
-  <arg name="linear_velocity_y_covariance" default="0.0001" />
-  <arg name="angular_velocity_z_covariance" default="0.0001" />
-
   <!-- IMU filter -->
-  <!-- <include file="$(find agribot_localization)/launch/imu_complementary_filter.launch" /> -->
   <include file="$(find agribot_localization)/launch/imu_madgwick_filter.launch" />
 
   <!-- Declination correction -->
-  <node pkg="agribot_localization" type="imu_declination_correction_node.py" name="imu_declination_correction_node"/>
+  <param name="/imu_declination_correction_node/wmm_config_filepath" value="$(env AGRIBOT_HOME)/agribot/configs/base/localization/WMM.COF" />
+  <node pkg="agribot_localization" type="imu_declination_correction_node.py" name="imu_declination_correction_node" />
 
   <!-- Odometry -->
-  <include file="$(find agribot_localization)/launch/odometry.launch">
-    <arg name="wheel_radius" value="$(arg wheel_radius)" />
-    <arg name="chassis_length" value="$(arg chassis_length)" />
-    <arg name="orientation_covariance" value="$(arg orientation_covariance)" />
-    <arg name="position_covariance" value="$(arg position_covariance)" />
-    <arg name="linear_velocity_x_covariance" value="$(arg linear_velocity_x_covariance)" />
-    <arg name="linear_velocity_y_covariance" value="$(arg linear_velocity_y_covariance)" />
-    <arg name="angular_velocity_z_covariance" value="$(arg angular_velocity_z_covariance)" />
-  </include>
+  <include file="$(find agribot_localization)/launch/odometry.launch" />
 
   <!-- Navsat transform -->
-  <include file="$(find agribot_localization)/launch/navsat_transform.launch"/>
+  <include file="$(find agribot_localization)/launch/navsat_transform.launch" />
 
   <!-- Robot localization -->
-  <include file="$(find agribot_localization)/launch/robot_localization.launch">
-    <arg name="use_ukf" value="$(arg use_ukf)" />
-  </include>
-
-  <!-- Translation of estimated odometry for map->odom EKF -->
-  <node pkg="agribot_localization" type="odom_to_navsatfix_node" name="odom_to_navsatfix_node_1">
-    <remap from="~input_odometry" to="/agribot/odom/prefiltered" />
-    <remap from="~translated_navsatfix" to="/agribot/map_odom_navsatfix" />
-    <remap from="~input_navsatfix" to="/agribot/gnss" />
-  </node>
-
-  <!-- Translation of estimated odometry for odom->base_footprint EKF -->
-  <node pkg="agribot_localization" type="odom_to_navsatfix_node" name="odom_to_navsatfix_node_2">
-    <remap from="~input_odometry" to="/agribot/odom/estimated" />
-    <remap from="~translated_navsatfix" to="/agribot/odom_base_navsatfix" />
-    <remap from="~input_navsatfix" to="/agribot/gnss" />
-  </node>
-
-  <group if="$(arg sim)">
-    <!-- Translation of gazebo ground truth odometry -->
-    <node pkg="agribot_localization" type="odom_to_navsatfix_node" name="odom_to_navsatfix_node_3">
-      <remap from="~input_odometry" to="/agribot/odometry" />
-      <remap from="~translated_navsatfix" to="/agribot/odom_ground_truth_navsatfix" />
-      <remap from="~input_navsatfix" to="/agribot/gnss" />
-    </node>
-
-  </group>
+  <include file="$(find agribot_localization)/launch/robot_localization.launch" />
 
 </launch>

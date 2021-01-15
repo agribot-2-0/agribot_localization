@@ -1,0 +1,87 @@
+@startuml agribot_localization
+
+' External input interfaces
+interface "/agribot/imu/raw\nsensor_msgs/Imu.msg" as imu_raw
+interface "/agribot/imu/magnetic_field\nsensor_msgs/MagneticField.msg" as magnetic_field
+interface "/agribot/encoder/caterpillar\nagribot_msgs/AgribotCaterpillar.msg" as encoder_caterpillar
+interface "/agribot/encoder/cart/front\nstd_msgs/Float32.msg" as encoder_cart_front
+interface "/agribot/encoder/cart/back\nstd_msgs/Float32.msg" as encoder_cart_back
+interface "/agribot/gnss\nsensor_msgs/NavSatFix.msg" as gnss
+
+' External output interfaces
+interface "/agribot/gnss/filtered\nsensor_msgs/NavSatFix.msg" as gnss_global
+interface "/agribot/odom/global\nav_msgs/Odometry.msg" as odom_global
+interface "/tf (odom -> base_footprint)\ntf2_msgs/TFMessage.msg" as odom_base_tf
+interface "/agribot/odom/local\nav_msgs/Odometry.msg" as odom_local
+interface "/tf (map -> odom)\ntf2_msgs/TFMessage.msg" as map_odom_tf
+interface "/tf (map -> utm)\ntf2_msgs/TFMessage.msg" as map_utm_tf
+
+
+component AgribotLocalization {
+
+  ' Components
+  [IMU Madgwick Filter\n\n\n] as Madgwick
+  [IMU Declination Correction] as Declination
+  [Wheel Odometry] as WheelOdometry
+  [Navsat Transform Node] as NavsatTransform
+  [odom -> base_footprint KF\n(robot_localization)] as LocalKf
+  [map -> odom KF\n(robot_localization)] as GlobalKf
+
+  ' Interfaces
+  interface "/agribot/imu/prefiltered\nsensor_msgs/Imu.msg" as imu_prefiltered
+  interface "/agribot/imu/filtered\nsensor_msgs/Imu.msg" as imu_filtered
+  interface "/agribot/odom/raw\nav_msgs/Odometry.msg" as odom_raw
+  interface "/agribot/odom/gps\nav_msgs/Odometry.msg" as odom_gps
+
+  ''' Internal connections '''
+  ' Madgwick
+  Madgwick - imu_prefiltered
+
+  ' Declination
+  imu_prefiltered )- Declination
+  Declination -up-( gnss
+  Declination -- imu_filtered
+
+  ' Wheel odometry
+  WheelOdometry -- odom_raw
+
+  ' Navsat transform
+  NavsatTransform --( imu_filtered
+  NavsatTransform --( gnss
+  NavsatTransform --( odom_global
+  NavsatTransform -- odom_gps
+
+  ' Local KF
+  LocalKf -up-( imu_filtered
+  LocalKf -up-( odom_raw
+
+  ' Global KF
+  GlobalKf -up-( imu_filtered
+  GlobalKf -up-( odom_raw
+  GlobalKf -up-( odom_gps
+
+}
+
+''' External connections '''
+' Madgwick
+Madgwick -up-( imu_raw
+Madgwick -up-( magnetic_field
+
+' Wheel odometry
+WheelOdometry -up-( encoder_caterpillar
+WheelOdometry -up-( encoder_cart_front
+WheelOdometry -up-( encoder_cart_back
+
+' Navsat transform
+NavsatTransform --down-- map_utm_tf
+NavsatTransform --down-- gnss_global
+
+' Local KF
+LocalKf -down- odom_base_tf
+LocalKf -down- odom_local
+
+' Global KF
+GlobalKf -down- map_odom_tf
+GlobalKf -down- odom_global
+
+@enduml
