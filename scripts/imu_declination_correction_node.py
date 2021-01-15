@@ -4,7 +4,6 @@ import os
 from math import radians
 
 import rospy
-import rospkg
 from sensor_msgs.msg import Imu, NavSatFix
 from tf.transformations import quaternion_from_euler, euler_from_quaternion
 
@@ -18,11 +17,15 @@ class ImuDeclinationCorrectionNode(object):
     def __init__(self):
         rospy.init_node('imu_declination_correction_node')
 
-        agribot_localization_path = rospkg.RosPack().get_path(
-            'agribot_localization')
-        wmm_filename = os.path.join(agribot_localization_path, 'params',
-                                    'WMM.COF')
-        self.geomag = GeoMag(wmm_filename)
+        if rospy.has_param(
+                '/imu_declination_correction_node/wmm_config_filepath'):
+            wmm_filename = rospy.get_param("/imu_declination_correction_node/wmm_config_filepath")
+            self.geomag = GeoMag(wmm_filename)
+        else:
+            rospy.logerr(
+                '[IMU Declination Correction Node] Missing wmm_config_filepath parameter. Exiting...'
+            )
+            rospy.signal_shutdown('wmm_config_filepath missing...')
 
         self.filtered_imu_pub = rospy.Publisher('/agribot/imu/filtered',
                                                 Imu,
