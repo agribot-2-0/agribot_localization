@@ -5,8 +5,8 @@
 
   <!-- Madgwick filter -->
   <node name="imu_filter_madgwick" pkg="imu_filter_madgwick" type="imu_filter_node" respawn="true" >
-    <remap from="imu/data_raw"  to="agribot/imu/raw" />
-    <remap from="imu/mag"       to="agribot/magnetic_field" />
+    <remap from="imu/data_raw"  to="agribot/imu/rotated/data" />
+    <remap from="imu/mag"       to="agribot/imu/rotated/mag" />
     <remap from="imu/data"      to="agribot/imu/prefiltered" />
   </node>
 
