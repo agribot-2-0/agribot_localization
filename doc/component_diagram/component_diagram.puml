@@ -73,8 +73,8 @@ component AgribotLocalization {
 
 ''' External connections '''
 ' Transformer
-Transformer -up-( imu_raw
 Transformer -up-( mag_raw
+Transformer -up-( imu_raw
 
 ' Wheel odometry
 WheelOdometry -up-----( encoder_caterpillar
