@@ -1,4 +1,11 @@
 <launch>
+  <!-- IMU transformer -->
+  <node pkg="imu_transformer" type="imu_transformer_node" name="imu_transformer">
+    <remap from="imu_in" to="/agribot/imu/raw" />
+    <remap from="imu_out" to="/agribot/imu/rotated" />
+    <param name="target_frame" value="base_footprint" />
+  </node>
+
   <!-- IMU filter -->
   <include file="$(find agribot_localization)/launch/imu_madgwick_filter.launch" />
 
