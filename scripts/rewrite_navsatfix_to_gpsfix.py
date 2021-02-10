@@ -1,11 +1,12 @@
 #!/usr/bin/env python2
 
+from math import degrees
+
 import rospy
 from sensor_msgs.msg import NavSatFix
 from gps_common.msg import GPSFix
 from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
-from math import degrees
 
 
 class NavsatfixToGPSFixRewriter(object):
@@ -33,7 +34,7 @@ class NavsatfixToGPSFixRewriter(object):
     def odom_cb(self, odom_msg):
         quat = odom_msg.pose.pose.orientation
         quat_list = [quat.x, quat.y, quat.z, quat.w]
-        roll, pitch, yaw = euler_from_quaternion(quat_list)
+        _roll, _pitch, yaw = euler_from_quaternion(quat_list)
         self.global_heading = NavsatfixToGPSFixRewriter.rep105_degrees_to_heading(
             yaw)
 
@@ -49,10 +50,10 @@ class NavsatfixToGPSFixRewriter(object):
 
 if __name__ == '__main__':
     rospy.init_node('navsatfix_to_gpsfix_rewriter')
-    raw_rewriter = NavsatfixToGPSFixRewriter('/agribot/gnss',
+    RAW_REWRITER = NavsatfixToGPSFixRewriter('/agribot/gnss',
                                              '/agribot/gpsfix',
                                              '/agribot/odom/global')
-    filtered_rewriter = NavsatfixToGPSFixRewriter('/agribot/gnss/filtered',
+    FILTERED_REWRITER = NavsatfixToGPSFixRewriter('/agribot/gnss/filtered',
                                                   '/agribot/gpsfix/filtered',
                                                   '/agribot/odom/global')
     NavsatfixToGPSFixRewriter.run()
