@@ -13,6 +13,9 @@
   <param name="/imu_declination_correction_node/wmm_config_filepath" value="$(env AGRIBOT_HOME)/agribot/configs/base/localization/WMM.COF" />
   <node pkg="agribot_localization" type="imu_declination_correction_node.py" name="imu_declination_correction_node" />
 
+  <!-- GPSFix visualization for mapviz (debug) -->
+  <node pkg="agribot_localization" type="rewrite_navsatfix_to_gpsfix.py" name="rewrite_navsatfix_to_gpsfix_node" />
+
   <!-- Odometry -->
   <include file="$(find agribot_localization)/launch/odometry.launch" />
 
