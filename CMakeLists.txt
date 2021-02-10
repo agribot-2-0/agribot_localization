@@ -80,6 +80,7 @@ install(TARGETS
 catkin_install_python(PROGRAMS
    scripts/geomag.py
    scripts/imu_declination_correction_node.py
+   scripts/rewrite_navsatfix_to_gpsfix.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
