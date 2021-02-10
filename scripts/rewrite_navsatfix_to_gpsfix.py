@@ -34,14 +34,18 @@ class NavsatfixToGPSFixRewriter(object):
     def odom_cb(self, odom_msg):
         quat = odom_msg.pose.pose.orientation
         quat_list = [quat.x, quat.y, quat.z, quat.w]
-        _roll, _pitch, yaw = euler_from_quaternion(quat_list)
+        _, _, yaw = euler_from_quaternion(quat_list)
         self.global_heading = NavsatfixToGPSFixRewriter.rep105_degrees_to_heading(
             yaw)
 
     @staticmethod
     def rep105_degrees_to_heading(yaw):
+        # REP105 uses ENU frame, heading is in NEU frame
+        # yaw must be rotated by 90 degrees (ENU's x points towards EAST, NEU's x towards NORTH)
+        # and inverted (right-handed system -> left-handed-system)
+        degrees_between_enu_and_neu = 90.0
         yaw_deg = degrees(yaw)
-        return -(yaw_deg - 90)
+        return -(yaw_deg - degrees_between_enu_and_neu)
 
     @staticmethod
     def run():
