@@ -3,7 +3,7 @@
 from math import radians
 
 import rospy
-from sensor_msgs.msg import Imu, NavSatFix
+from sensor_msgs.msg import Imu, NavSatFix, NavSatStatus
 from tf.transformations import quaternion_from_euler, euler_from_quaternion
 
 from geomag import GeoMag
@@ -37,16 +37,24 @@ class ImuDeclinationCorrectionNode(object):
             "/agribot/imu/prefiltered", Imu, self.prefiltered_imu_callback)
 
     def navsatfix_callback(self, navsatfix_msg):
-        mag = self.geomag.GeoMag(navsatfix_msg.latitude,
-                                 navsatfix_msg.longitude,
-                                 navsatfix_msg.altitude)
-        self.declination = radians(mag.dec)
-        rospy.loginfo_once('[ImuDeclinationCorrectionNode] Navsatfix received')
+        if navsatfix_msg.status.status is not NavSatStatus.STATUS_NO_FIX:
+            mag = self.geomag.GeoMag(navsatfix_msg.latitude,
+                                     navsatfix_msg.longitude,
+                                     navsatfix_msg.altitude)
+            self.declination = radians(mag.dec)
+            rospy.loginfo_once(
+                '[ImuDeclinationCorrectionNode] First good NavSatFix received')
+        else:
+            rospy.logwarn_throttle(
+                5,
+                '[ImuDeclinationCorrectionNode] NavSatFix ignored - STATUS_NO_FIX'
+            )
 
     def prefiltered_imu_callback(self, prefiltered_imu_msg):
         if self.declination is None:
-            rospy.logwarn(
-                '[ImuDeclinationCorrectionNode] Navsatfix not received yet. Skipping Imu message...'
+            rospy.logwarn_throttle(
+                5,
+                '[ImuDeclinationCorrectionNode] Navsatfix not received yet. Imu messages are not republished...'
             )
             return
 
