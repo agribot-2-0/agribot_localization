@@ -54,8 +54,8 @@ class ImuDeclinationCorrectionNode(object):
         if self.declination is None:
             rospy.logwarn_throttle(
                 5,
-                '[ImuDeclinationCorrectionNode] Navsatfix not received yet. Imu messages are not republished...'
-            )
+                """[ImuDeclinationCorrectionNode] Navsatfix not received yet.
+                Imu messages are not republished...""")
             return
 
         filtered_imu_msg = self.apply_declination_correction(
