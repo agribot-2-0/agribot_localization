@@ -50,7 +50,7 @@ class ImuDeclinationCorrectionNode(object):
 
             declination_msg = Float64()
             declination_msg.data = mag.dec
-            self.declination_pub.publish(msg)
+            self.declination_pub.publish(declination_msg)
 
             rospy.loginfo_once(
                 '[ImuDeclinationCorrectionNode] First good NavSatFix received')
