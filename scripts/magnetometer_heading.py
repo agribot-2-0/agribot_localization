@@ -29,7 +29,7 @@ class MagnetometerHeading(object):
         self.declination = dec_msg.data
 
     def magnetometer_callback(self, mag_msg):
-        heading = self.calculate_heading_from_magnetig_field(mag_msg)
+        heading = MagnetometerHeading.calculate_heading_from_magnetig_field(mag_msg)
 
         if self.declination is not None:
             msg = Float64()
@@ -37,11 +37,11 @@ class MagnetometerHeading(object):
             self.heading_pub.publish(msg)
         else:
             rospy.logwarn_throttle(
-                5,
-                """[MagnetometerHeading] Declination not received yet.
+                5, """[MagnetometerHeading] Declination not received yet.
                 Magnetic heading is not published...""")
 
-    def calculate_heading_from_magnetig_field(self, mag_msg):
+    @staticmethod
+    def calculate_heading_from_magnetig_field(mag_msg):
         mag_x = mag_msg.magnetic_field.x
         mag_y = mag_msg.magnetic_field.y
 
