@@ -54,8 +54,8 @@ class ImuMagnetometerFilter(object):
         return atan2(mag_x, mag_y)
 
     @staticmethod
-    def quaternion_msg_from_rpy(r, p, y):
-        quat = quaternion_from_euler(r, p, y)
+    def quaternion_msg_from_rpy(roll, pitch, yaw):
+        quat = quaternion_from_euler(roll, pitch, yaw)
         quat_msg = Quaternion()
         quat_msg.x = quat[0]
         quat_msg.y = quat[1]
