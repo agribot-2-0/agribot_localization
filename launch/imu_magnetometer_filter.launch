@@ -1,0 +1,12 @@
+<launch>
+
+  <!-- Magnetometer (yaw) filter -->
+  <node name="agribot_imu_magnetometer_filter" pkg="agribot_localization" type="imu_magnetometer_filter.py" respawn="true" >
+    <param name="queue_size" value="5" type="int"/>
+
+    <remap from="imu/data_raw"  to="agribot/imu/rotated/data" />
+    <remap from="imu/mag"       to="agribot/imu/rotated/mag" />
+    <remap from="imu/data"      to="agribot/imu/prefiltered" />
+  </node>
+
+</launch>

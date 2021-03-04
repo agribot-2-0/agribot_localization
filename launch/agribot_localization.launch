@@ -7,7 +7,9 @@
   </node>
 
   <!-- IMU filter -->
-  <include file="$(find agribot_localization)/launch/imu_madgwick_filter.launch" />
+  <!-- <include file="$(find agribot_localization)/launch/imu_madgwick_filter.launch" /> -->
+  <!-- <include file="$(find agribot_localization)/launch/imu_complementary_filter.launch" /> -->
+  <include file="$(find agribot_localization)/launch/imu_magnetometer_filter.launch" />
 
   <!-- Declination correction -->
   <param name="/imu_declination_correction_node/wmm_config_filepath" value="$(env AGRIBOT_HOME)/agribot/configs/base/localization/WMM.COF" />
