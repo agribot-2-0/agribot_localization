@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 
-from math import atan2
+from math import atan2, sin, cos
 from statistics import mean
 
 import rospy
@@ -17,7 +17,7 @@ class ImuMagnetometerFilter(object):
         rospy.init_node('imu_magnetometer_filter')
 
         self.queue_size = int(get_parameter('~queue_size'))
-        self.yaw_list = []
+        self.sin_cos_list = []
 
         self.imu_pub = rospy.Publisher('imu/data', Imu, queue_size=1)
 
@@ -27,18 +27,22 @@ class ImuMagnetometerFilter(object):
     def magnetometer_callback(self, mag_msg):
 
         # Pop yaw from queue if necessary
-        if len(self.yaw_list) >= self.queue_size:
-            self.yaw_list.pop(0)
+        if len(self.sin_cos_list) >= self.queue_size:
+            self.sin_cos_list.pop(0)
 
-        # Add new yaw to queue
+        # Add sine and cosine of new yaw to the queue
         yaw = ImuMagnetometerFilter.calculate_yaw_from_magnetic_field(mag_msg)
-        self.yaw_list.append(yaw)
+        self.sin_cos_list.append((sin(yaw), cos(yaw)))
 
         imu_msg = Imu()
         imu_msg.header = mag_msg.header
 
         # Calculate orientation based on yaw average
-        yaw_avg = mean(self.yaw_list)
+        # Baseed on: https://en.wikipedia.org/wiki/Mean_of_circular_quantities
+        sine_mean = mean([x[0] for x in self.sin_cos_list])
+        cosine_mean = mean([x[1] for x in self.sin_cos_list])
+        yaw_avg = atan2(sine_mean, cosine_mean)
+
         imu_msg.orientation = ImuMagnetometerFilter.quaternion_msg_from_rpy(
             0, 0, yaw_avg)
 
