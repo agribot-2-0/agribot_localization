@@ -12,15 +12,19 @@ from agribot_common.agribot_parameters import get_parameter
 
 
 class ImuMagnetometerFilter(object):
+    sin_cos_list = []
+
     def __init__(self):
 
         rospy.init_node('imu_magnetometer_filter')
 
-        self.queue_size = int(get_parameter('~queue_size'))
-        self.sin_cos_list = []
+        try:
+            self.queue_size = int(get_parameter('~queue_size'))
+        except ValueError as e:
+            rospy.logerr(e)
+            rospy.signal_shutdown(e)
 
         self.imu_pub = rospy.Publisher('imu/data', Imu, queue_size=1)
-
         self.magnetometer_sub = rospy.Subscriber("imu/mag", MagneticField,
                                                  self.magnetometer_callback)
 
@@ -34,15 +38,14 @@ class ImuMagnetometerFilter(object):
         yaw = ImuMagnetometerFilter.calculate_yaw_from_magnetic_field(mag_msg)
         self.sin_cos_list.append((sin(yaw), cos(yaw)))
 
-        imu_msg = Imu()
-        imu_msg.header = mag_msg.header
-
         # Calculate orientation based on yaw average
         # Baseed on: https://en.wikipedia.org/wiki/Mean_of_circular_quantities
         sine_mean = mean([x[0] for x in self.sin_cos_list])
         cosine_mean = mean([x[1] for x in self.sin_cos_list])
         yaw_avg = atan2(sine_mean, cosine_mean)
 
+        imu_msg = Imu()
+        imu_msg.header = mag_msg.header
         imu_msg.orientation = ImuMagnetometerFilter.quaternion_msg_from_rpy(
             0, 0, yaw_avg)
 
