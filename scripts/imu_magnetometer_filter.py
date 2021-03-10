@@ -20,9 +20,9 @@ class ImuMagnetometerFilter(object):
 
         try:
             self.queue_size = int(get_parameter('~queue_size'))
-        except ValueError as e:
-            rospy.logerr(e)
-            rospy.signal_shutdown(e)
+        except ValueError as exc:
+            rospy.logerr(exc)
+            rospy.signal_shutdown(exc)
 
         self.imu_pub = rospy.Publisher('imu/data', Imu, queue_size=1)
         self.magnetometer_sub = rospy.Subscriber("imu/mag", MagneticField,
