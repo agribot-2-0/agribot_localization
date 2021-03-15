@@ -17,6 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
   robot_localization
   imu_complementary_filter
   std_msgs
+  geometry_msgs
   nav_msgs
   sensor_msgs
   agribot_msgs
@@ -82,6 +83,7 @@ catkin_install_python(PROGRAMS
    scripts/imu_declination_correction_node.py
    scripts/rewrite_navsatfix_to_gpsfix.py
    scripts/magnetometer_heading.py
+   scripts/imu_magnetometer_filter.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
