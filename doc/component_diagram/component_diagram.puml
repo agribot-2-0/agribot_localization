@@ -1,12 +1,16 @@
 @startuml agribot_localization
 
 ' External input interfaces
-interface "/agribot/imu/raw/data\nsensor_msgs/Imu.msg" as imu_raw
-interface "/agribot/imu/raw/mag\nsensor_msgs/MagneticField.msg" as mag_raw
-interface "/agribot/encoder/caterpillar\nagribot_msgs/AgribotCaterpillar.msg" as encoder_caterpillar
-interface "/agribot/encoder/cart/front\nstd_msgs/Float32.msg" as encoder_cart_front
-interface "/agribot/encoder/cart/back\nstd_msgs/Float32.msg" as encoder_cart_back
+interface "/agribot/encoder/cart/(front/back)\n\
+std_msgs/Float32.msg\n\n\
+/agribot/encoder/caterpillar\n\
+agribot_msgs/AgribotCaterpillar.msg" as encoder
+interface "/agribot/imu/raw/data\n\
+sensor_msgs/Imu.msg\n\n\
+/agribot/imu/raw/mag\n\
+sensor_msgs/MagneticField.msg" as imu_raw
 interface "/agribot/gnss\nsensor_msgs/NavSatFix.msg" as gnss
+
 
 ' External output interfaces
 interface "/agribot/gnss/filtered\nsensor_msgs/NavSatFix.msg" as gnss_filtered
@@ -17,11 +21,11 @@ interface "/tf (map -> odom)\ntf2_msgs/TFMessage.msg" as map_odom_tf
 interface "/tf_static (map -> utm)\ntf2_msgs/TFMessage.msg" as map_utm_tf
 
 
-component AgribotLocalization {
+component agribot_localization {
 
   ' Components
-  [IMU Transformer\n\n\n] as Transformer
-  [IMU Madgwick Filter\n\n\n] as Madgwick
+  [IMU Transformer] as Transformer
+  [IMU Madgwick Filter] as Madgwick
   [IMU Declination Correction] as Declination
   [Wheel Odometry] as WheelOdometry
   [Navsat Transform Node] as NavsatTransform
@@ -29,21 +33,23 @@ component AgribotLocalization {
   [map -> odom KF\n(robot_localization)] as GlobalKf
 
   ' Interfaces
-  interface "/agribot/imu/rotated/data\nsensor_msgs/Imu.msg" as imu_rotated
-  interface "/agribot/imu/rotated/mag\nsensor_msgs/MagneticField.msg" as mag_rotated
+  interface "/agribot/imu/rotated/data\n\
+sensor_msgs/Imu.msg\n\n\
+/agribot/imu/rotated/mag\n\
+sensor_msgs/MagneticField.msg" as imu_rotated
   interface "/agribot/imu/prefiltered\nsensor_msgs/Imu.msg" as imu_prefiltered
   interface "/agribot/imu/filtered\nsensor_msgs/Imu.msg" as imu_filtered
-  interface "/agribot/odom/raw\nav_msgs/Odometry.msg" as odom_raw
-  interface "/agribot/odom/gps\nav_msgs/Odometry.msg" as odom_gps
+  interface "/agribot/odom/raw\n\
+nav_msgs/Odometry.msg" as odom_raw
+  interface "/agribot/odom/gps\n\
+nav_msgs/Odometry.msg" as odom_gps
 
   ''' Internal connections '''
   ' Transformer
-  Transformer -- mag_rotated
   Transformer -- imu_rotated
 
   ' Madgwick
   imu_rotated )-- Madgwick
-  mag_rotated )-- Madgwick
   Madgwick -- imu_prefiltered
 
   ' Declination
@@ -73,13 +79,10 @@ component AgribotLocalization {
 
 ''' External connections '''
 ' Transformer
-Transformer -up-( mag_raw
-Transformer -up-( imu_raw
+imu_raw )-- Transformer
 
 ' Wheel odometry
-WheelOdometry -up-----( encoder_caterpillar
-WheelOdometry -up-----( encoder_cart_front
-WheelOdometry -up-----( encoder_cart_back
+WheelOdometry -up-----( encoder
 
 ' Navsat transform
 NavsatTransform --down-- map_utm_tf
