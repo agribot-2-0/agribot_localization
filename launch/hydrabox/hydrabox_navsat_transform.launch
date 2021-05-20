@@ -1,0 +1,17 @@
+<launch>
+
+  <arg name="publish_tf" default="true" />
+
+  <node pkg="robot_localization" type="navsat_transform_node" name="hydrabox_navsat_transform" respawn="true">
+
+    <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/localization/navsat_transform.yaml" />
+    <param name="broadcast_cartesian_transform" value="$(arg publish_tf)" />
+
+    <remap from="imu/data" to="agribot/heading/hydrabox" />
+    <remap from="gps/fix" to="agribot/gnss/hydrabox" />
+    <remap from="odometry/filtered" to="agribot/odom/global/hydrabox" />
+    <remap from="odometry/gps" to="agribot/odom/gps/hydrabox" />
+    <remap from="gps/filtered" to="agribot/gnss/hydrabox/filtered" />
+  </node>
+
+</launch>
