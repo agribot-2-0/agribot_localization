@@ -62,9 +62,9 @@ if __name__ == '__main__':
                                                         '/agribot/odom/global/bynav')
 
     RAW_HYDRABOX_REWRITER = NavsatfixToGPSFixRewriter('/agribot/gnss/hydrabox',
-                                                   '/agribot/gpsfix/hydrabox',
-                                                   '/agribot/odom/global/hydrabox')
+                                                      '/agribot/gpsfix/hydrabox',
+                                                      '/agribot/odom/global/hydrabox')
     FILTERED_HYDRABOX_REWRITER = NavsatfixToGPSFixRewriter('/agribot/gnss/hydrabox/filtered',
-                                                        '/agribot/gpsfix/hydrabox/filtered',
-                                                        '/agribot/odom/global/hydrabox')
+                                                           '/agribot/gpsfix/hydrabox/filtered',
+                                                           '/agribot/odom/global/hydrabox')
     NavsatfixToGPSFixRewriter.run()
