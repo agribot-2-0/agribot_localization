@@ -2,6 +2,8 @@
 
   <arg name="tf_source" default="$(env AGRIBOT_LOCALIZATION_TF_SOURCE)" />
 
+  <node pkg="topic_tools" type="relay" name="gnss_filtered_relay" args="/agribot/gnss/$(arg tf_source)/filtered /agribot/gnss/filtered" />
+
   <!-- Bynav localization -->
   <include file="$(find agribot_localization)/launch/bynav/bynav_navsat_transform.launch">
     <arg name="publish_tf" value="$(eval arg('tf_source') == 'bynav')" />
