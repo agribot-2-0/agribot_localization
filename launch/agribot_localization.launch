@@ -3,6 +3,8 @@
   <arg name="tf_source" default="$(env AGRIBOT_LOCALIZATION_TF_SOURCE)" />
 
   <node pkg="topic_tools" type="relay" name="gnss_filtered_relay" args="/agribot/gnss/$(arg tf_source)/filtered /agribot/gnss/filtered" />
+  <node pkg="topic_tools" type="relay" name="odom_local_relay" args="/agribot/odom/local/$(arg tf_source)/filtered /agribot/odom/local" />
+  <node pkg="topic_tools" type="relay" name="odom_global_relay" args="/agribot/odom/global/$(arg tf_source)/filtered /agribot/odom/global" />
 
   <!-- Bynav localization -->
   <include file="$(find agribot_localization)/launch/bynav/bynav_navsat_transform.launch">
