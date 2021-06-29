@@ -9,7 +9,7 @@
 
     <remap from="imu/data" to="agribot/heading/bynav" />
     <remap from="gps/fix" to="agribot/gnss/bynav" />
-    <remap from="odometry/filtered" to="agribot/odom/global/bynav" />
+    <remap from="odometry/filtered" to="agribot/odom/local/bynav" />
     <remap from="odometry/gps" to="agribot/odom/gps/bynav" />
     <remap from="gps/filtered" to="agribot/gnss/bynav/filtered" />
   </node>

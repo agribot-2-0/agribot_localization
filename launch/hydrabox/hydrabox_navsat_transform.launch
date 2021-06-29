@@ -9,7 +9,7 @@
 
     <remap from="imu/data" to="agribot/heading/hydrabox" />
     <remap from="gps/fix" to="agribot/gnss/hydrabox" />
-    <remap from="odometry/filtered" to="agribot/odom/global/hydrabox" />
+    <remap from="odometry/filtered" to="agribot/odom/local/hydrabox" />
     <remap from="odometry/gps" to="agribot/odom/gps/hydrabox" />
     <remap from="gps/filtered" to="agribot/gnss/hydrabox/filtered" />
   </node>
