@@ -11,7 +11,7 @@
     <arg name="publish_tf" value="$(eval arg('tf_source') == 'bynav')" />
   </include>
 
-  <include file="$(find agribot_localization)/launch/bynav/bynav_robot_localization.launch">
+  <include file="$(find agribot_localization)/launch/bynav/bynav_robot_localization_single.launch">
     <arg name="publish_tf" value="$(eval arg('tf_source') == 'bynav')" />
   </include>
 
@@ -20,7 +20,7 @@
     <arg name="publish_tf" value="$(eval arg('tf_source') == 'hydrabox')" />
   </include>
 
-  <include file="$(find agribot_localization)/launch/hydrabox/hydrabox_robot_localization.launch">
+  <include file="$(find agribot_localization)/launch/hydrabox/hydrabox_robot_localization_single.launch">
     <arg name="publish_tf" value="$(eval arg('tf_source') == 'hydrabox')" />
   </include>
 

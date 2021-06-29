@@ -1,0 +1,37 @@
+<launch>
+  <!-- EKF/UKF selection -->
+  <arg name="publish_tf" default="true" />
+  <arg name="use_ukf" default="$(env AGRIBOT_LOCALIZATION_USE_UKF)" />
+
+  <arg name="local_odom_topic" value="agribot/odom/local/hydrabox" />
+
+  <!-- Zero map => odom transform -->
+  <node if="$(arg publish_tf)" pkg="tf" type="static_transform_publisher" name="odom_map_broadcaster" args="0 0 0 0 0 0 map odom 100" />
+
+  <!-- Extended Kalman Filter -->
+  <group unless="$(arg use_ukf)">
+    <!-- Local KF -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="hydrabox_localization_single" clear_params="true" respawn="true">
+      <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/localization/hydrabox/hydrabox_single_kf.yaml" />
+      <param name="publish_tf" value="$(arg publish_tf)" />
+
+      <remap from="odometry/filtered" to="$(arg local_odom_topic)" />
+      <remap from="set_pose" to="set_hydrabox_pose" />
+    </node>
+
+  </group>
+
+  <!-- Unscented Kalman Filter -->
+  <group if="$(arg use_ukf)">
+    <!-- Local KF -->
+    <node pkg="robot_localization" type="ukf_localization_node" name="hydrabox_localization_single" clear_params="true" respawn="true">
+      <rosparam command="load" file="$(env AGRIBOT_HOME)/agribot/configs/base/localization/hydrabox/hydrabox_single_kf.yaml" />
+      <param name="publish_tf" value="$(arg publish_tf)" />
+
+      <remap from="odometry/filtered" to="$(arg local_odom_topic)" />
+      <remap from="set_pose" to="set_hydrabox_pose" />
+    </node>
+
+  </group>
+
+</launch>
