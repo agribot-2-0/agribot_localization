@@ -71,6 +71,9 @@ add_executable(odom_to_navsatfix_node src/odom_to_navsatfix_node.cpp src/OdomToN
 target_link_libraries(odom_to_navsatfix_node ${catkin_LIBRARIES} ${GeographicLib_LIBRARIES})
 add_dependencies(odom_to_navsatfix_node ${catkin_EXPORTED_TARGETS})
 
+add_executable(rewrite_local_odom_to_global_node src/rewrite_local_odom_to_global_node.cpp src/RewriteOdomLocalToGlobalNode.cpp)
+target_link_libraries(rewrite_local_odom_to_global_node ${catkin_LIBRARIES} ${GeographicLib_LIBRARIES})
+add_dependencies(rewrite_local_odom_to_global_node ${catkin_EXPORTED_TARGETS})
 
 #############
 ## Install ##
@@ -79,6 +82,7 @@ add_dependencies(odom_to_navsatfix_node ${catkin_EXPORTED_TARGETS})
 install(TARGETS
   odometry_node
   odom_to_navsatfix_node
+  rewrite_local_odom_to_global_node
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )

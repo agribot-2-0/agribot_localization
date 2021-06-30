@@ -8,6 +8,13 @@
   <!-- Zero map => odom transform -->
   <node if="$(arg publish_tf)" pkg="tf" type="static_transform_publisher" name="odom_map_broadcaster" args="0 0 0 0 0 0 map odom 100" />
 
+  <!-- Rewrite local odom to global odom for compatibility  with 2-step EKF -->
+  <node if="$(arg publish_tf)" pkg="agribot_localization" type="rewrite_local_odom_to_global_node" name="rewrite_local_odom_to_global_node">
+    <param name="target_frame_id" value="map"/>
+    <remap from="~local_odom" to="/agribot/odom/local"/>
+    <remap from="~global_odom" to="/agribot/odom/global"/>
+  </node> 
+
   <!-- Extended Kalman Filter -->
   <group unless="$(arg use_ukf)">
     <!-- Local KF -->
