@@ -25,6 +25,11 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(Boost REQUIRED COMPONENTS thread)
+
+# Geographiclib installs FindGeographicLib.cmake to this non-standard location
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/usr/share/cmake/geographiclib/")
+find_package(GeographicLib REQUIRED)
+
 ################################################
 ## Declare ROS messages, services and actions ##
 ################################################
@@ -63,7 +68,7 @@ target_link_libraries(odometry_node ${catkin_LIBRARIES})
 add_dependencies(odometry_node ${catkin_EXPORTED_TARGETS})
 
 add_executable(odom_to_navsatfix_node src/odom_to_navsatfix_node.cpp src/OdomToNavSatFixNode.cpp)
-target_link_libraries(odom_to_navsatfix_node ${catkin_LIBRARIES})
+target_link_libraries(odom_to_navsatfix_node ${catkin_LIBRARIES} ${GeographicLib_LIBRARIES})
 add_dependencies(odom_to_navsatfix_node ${catkin_EXPORTED_TARGETS})
 
 
