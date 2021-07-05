@@ -54,10 +54,17 @@ class NavsatfixToGPSFixRewriter(object):
 
 if __name__ == '__main__':
     rospy.init_node('navsatfix_to_gpsfix_rewriter')
-    RAW_REWRITER = NavsatfixToGPSFixRewriter('/agribot/gnss',
-                                             '/agribot/gpsfix',
-                                             '/agribot/odom/global')
-    FILTERED_REWRITER = NavsatfixToGPSFixRewriter('/agribot/gnss/filtered',
-                                                  '/agribot/gpsfix/filtered',
-                                                  '/agribot/odom/global')
+    RAW_BYNAV_REWRITER = NavsatfixToGPSFixRewriter('/agribot/gnss/bynav',
+                                                   '/agribot/gpsfix/bynav',
+                                                   '/agribot/odom/global/bynav')
+    FILTERED_BYNAV_REWRITER = NavsatfixToGPSFixRewriter('/agribot/gnss/bynav/filtered',
+                                                        '/agribot/gpsfix/bynav/filtered',
+                                                        '/agribot/odom/global/bynav')
+
+    RAW_HYDRABOX_REWRITER = NavsatfixToGPSFixRewriter('/agribot/gnss/hydrabox',
+                                                      '/agribot/gpsfix/hydrabox',
+                                                      '/agribot/odom/global/hydrabox')
+    FILTERED_HYDRABOX_REWRITER = NavsatfixToGPSFixRewriter('/agribot/gnss/hydrabox/filtered',
+                                                           '/agribot/gpsfix/hydrabox/filtered',
+                                                           '/agribot/odom/global/hydrabox')
     NavsatfixToGPSFixRewriter.run()
