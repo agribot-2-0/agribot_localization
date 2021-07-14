@@ -4,13 +4,17 @@
 
 #pragma once
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+#include <tf2/utils.h>
+#pragma GCC diagnostic pop
+
 #include <agribot_localization/AgribotOdometry.h>
 #include <agribot_msgs/AgribotCaterpillar.h>
 #include <agribot_msgs/AgribotCaterpillarWheelsRotation.h>
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
 #include <std_msgs/Float32.h>
-#include <tf2/utils.h>
 #include <tf2_ros/transform_listener.h>
 
 class AgribotOdometryNode

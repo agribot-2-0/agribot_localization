@@ -4,15 +4,19 @@
 
 #pragma once
 
-#include <ros/ros.h>
-#include <tf2/utils.h>
-#include <tf2_ros/transform_listener.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 #include <robot_localization/navsat_conversions.h>
+#include <tf2/utils.h>
+#pragma GCC diagnostic pop
 
-#include <nav_msgs/Odometry.h>
-#include <sensor_msgs/NavSatFix.h>
 #include <geometry_msgs/PointStamped.h>
+#include <nav_msgs/Odometry.h>
+#include <ros/ros.h>
+#include <sensor_msgs/NavSatFix.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_ros/transform_listener.h>
 
 #include <string>
 

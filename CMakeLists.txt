@@ -3,7 +3,8 @@
 #############################################################################
 cmake_minimum_required(VERSION 2.8.3)
 project(agribot_localization)
-add_compile_options(-std=c++14)
+## Compilation options
+add_compile_options(-std=c++17 -Wall -Wextra -pedantic -Werror)
 
 #############################################################################
 ## Find catkin packages and libraries for catkin and system dependencies   ##
