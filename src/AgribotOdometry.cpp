@@ -65,7 +65,6 @@ agribotVelocities AgribotOdometry::computeVelocities(float eta1, float theta0, f
 
   float s0 = sin(theta0);
   float c0 = cos(theta0);
-  float s2 = sin(theta2);
   float c2 = cos(theta2);
   float s01 = sin(theta0 + theta1);
   float c01 = cos(theta0 + theta1);

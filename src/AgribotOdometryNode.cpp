@@ -4,7 +4,7 @@
 
 #include <agribot_localization/AgribotOdometryNode.h>
 
-AgribotOdometryNode::AgribotOdometryNode() : _bTimestampSet(false), _nh("~")
+AgribotOdometryNode::AgribotOdometryNode() : _nh("~"), _bTimestampSet(false)
 {
   if (_nh.hasParam("/dimensions/wheel_radius"))
   {

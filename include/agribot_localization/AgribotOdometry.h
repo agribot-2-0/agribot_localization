@@ -23,21 +23,21 @@ struct agribotVelocities
 class AgribotOdometry : public AgribotComponent
 {
 private:
+  double _dDt;
+  bool _bTheta0Received;
+  bool _bTheta1Received;
+  bool _bTheta2Received;
+  bool _bDtSet;
+
+  float _fX;
+  float _fY;
   float _fTheta0;
   float _fTheta1;
   float _fTheta2;
   float _fEta1;
   float _fWheelRadius;
   float _fChassisLength;
-  float _fX;
-  float _fY;
   agribotVelocities _agribot_velocities;
-
-  double _dDt;
-  bool _bTheta0Received;
-  bool _bTheta1Received;
-  bool _bTheta2Received;
-  bool _bDtSet;
 
   double _dXWheel = 0;
   double _dYWheel = 0;
